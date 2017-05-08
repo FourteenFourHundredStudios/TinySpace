@@ -17,12 +17,12 @@ app.get('/loginvalidate', function (req, res) {
 				if(req.query.logged=="true"){
 					console.log("checked!");
 					var CookieCode=sha1(Math.random()+"TINYTINY");
-					//MongoClient.connect(url, function(err, db) {
+
 						db.collection("users").update(
 							{username: params.username },
 							{$set: {session: CookieCode} }
 						);	
-				//	});
+
 					res.writeHead(302, {
 						'Location': "/spaces",
 						//'Set-Cookie': 'tinySession='+sessionId+'; expires='+new Date(new Date().getTime()+(mins * 60 * 1000)).toUTCString(),
