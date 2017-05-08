@@ -1,0 +1,108 @@
+<html>	
+	<head>
+		<title>Look at this post</title>
+		<script type="text/javascript" src="socketio.js"></script>
+		
+		<link href="tinystyle.css" rel="stylesheet">
+	</head>
+	<body onkeydown="key(event)">
+		<center>
+			
+			<h1 style="padding:0;margin:0;"><span style="color:rgb(0, 216, 90)">Tiny</span>Space<span style="color:rgb(0, 216, 90)">.</span>co!</h1>
+			
+			<b>
+			<span style="color:rgb(0, 216, 90)">/</span><tiny>
+				log(currentParams.p);
+			</tiny></b>
+			<br><br>
+		
+				<div id="boxContainer" class="tinyBox">
+				
+					<div id="post1" class="tinyPostbox">
+						<div style="background-color:rgb(0, 216, 90)">
+							<h1 id="postTitle" style="padding:10px;margin: 0px;color:white;float:left;font-size:25">
+								Dogs...
+							</h1>
+
+							<h1 id="postPoints" style="padding:10px;margin: 0px;color:yellow;float:right;font-size:25">
+								1000
+							</h1>
+							<hr style="margin:0;padding:0;width:100%; visibility: hidden;">
+						</div>
+						<div id="postContent" style="padding:10;width:100%;width:auto;height:90%;float:left">
+							Hands are really just dogs in disguise
+						</div>
+						<br>
+						<!--input type="button" class="tinyButton" style="width:100%" value="Threads"-->
+					</div>
+				</div><br>
+				<input type="submit" class="tinyButton" onClick="bad()" value="Bad">
+				<input type="button" class="tinyButton" onClick="good()" value="Good">
+			
+			<div style="font-size: 10px;position: fixed;bottom: 10;width: 100%;">We have the <i>tiniest</i> space. How tiny is your space? Probably not this tiny.</div>
+		</center>
+			
+	</body>
+</html>
+
+<script type="text/javascript" src="animation.js"></script>
+<script type ="text/javascript">
+
+	
+
+	var socket = io();
+
+
+	socket.on('postRight', function(msg){
+		//console.log(msg);
+		if(msg.type=="text"){
+			slideOutIn("post1",[
+				["postContent",msg.content],
+				["postTitle",msg.title],
+				["postPoints",msg.rating]
+			],function(){});
+		}else if(msg.type=="image"){
+			slideOutIn("post1",[
+				["postContent","<img src='"+msg.content+"' class='tinyImage'>"],
+				["postTitle",msg.title],["postPoints",msg.rating]
+			],function(){});
+		}
+	});
+
+	socket.on('postLeft', function(msg){
+		//console.log(msg);
+		if(msg.type=="text"){
+			slideOutInLeft("post1",[
+				["postContent",msg.content],
+				["postTitle",msg.title],
+				["postPoints",msg.rating]
+			],function(){});
+		}else if(msg.type=="image"){
+			slideOutInLeft("post1",[
+				["postContent","<img src='"+msg.content+"' class='tinyImage'>"],
+				["postTitle",msg.title],["postPoints",msg.rating]
+			],function(){});
+		}
+	});
+
+	function good(){
+		socket.emit('getSpace',{space:"<tiny>log(currentParams.p)</tiny>",rate:"good"});
+	}
+
+	function bad(){
+		socket.emit('getSpace',{space:"<tiny>log(currentParams.p)</tiny>",rate:"bad"});
+	}
+
+	good();
+
+
+	function key(e){
+		var x = event.keyCode;
+		if(x==39){
+			good();
+		}else if(x==37){
+			bad();
+		}
+	}
+
+</script>

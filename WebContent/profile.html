@@ -1,0 +1,69 @@
+
+    <div style="font-size: small;margin-right: 10;" align="right">
+        <a href="logout.html">logout</a>
+        <a href="profile.html">account</a>
+    </div>
+
+    <html>
+    <head>
+        <title>Look at this post</title>
+        <script type="text/javascript" src="socketio.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,300i,400,500,700,900" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+        <link href="tinystyle.css" rel="stylesheet">
+    </head>
+    <body>
+    <center>
+        <tiny>
+
+
+            //log(param[0]);
+            for(var i=0;i<param[0].length;i++){
+                log(param[0][i].content);
+            }
+
+        </tiny>
+
+        <div id="boxContainer" class="tinyBoxV">
+
+            <div id="post1" class="tinyPostboxV" >
+                <div style="background-color:rgb(0, 216, 90)">
+                    <h1 id="postTitle" style="padding:10px;margin: 0px;color:white;float:left;font-size:25">Demo TinySpace</h1>
+                    <hr style="margin:0;padding:0;width:100%; visibility: hidden;">
+                </div>
+                <div id="postContent" style="padding:10;width:100%;width:auto;height:90%;float:left">
+                    Hands are really just dogs in disguise
+                </div>
+                <br>
+                <!--input type="button" class="tinyButton" style="width:100%" value="Threads"-->
+            </div>
+        </div><br>
+
+        <div id="boxContainer" class="tinyBoxV">
+
+            <div id="post1" class="tinyPostboxV" >
+                <div style="background-color:rgb(0, 216, 90)">
+                    <h1 id="postTitle" style="padding:10px;margin: 0px;color:white;float:left;font-size:25">Demo TinySpace</h1>
+                    <hr style="margin:0;padding:0;width:100%; visibility: hidden;">
+                </div>
+                <div id="postContent" style="padding:10;width:100%;width:auto;height:90%;float:left">
+                    Hands are really just dogs in disguise
+                </div>
+                <br>
+                <!--input type="button" class="tinyButton" style="width:100%" value="Threads"-->
+            </div>
+        </div><br>
+
+
+        <div style="font-size: 10px;position: fixed;bottom: 10;width: 100%;">We have the <i>tiniest</i> space. How tiny is your space? Probably not this tiny.</div>
+    </center>
+
+    </body>
+    </html>
+
+    <script type="text/javascript" src="animation.js"></script>
+    <script type ="text/javascript">
+
+
+    </script>

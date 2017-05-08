@@ -1,0 +1,47 @@
+<html>	
+	<head>
+		<title>Login!</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,300i,400,500,700,900" rel="stylesheet">
+		<link href="tinystyle.css" rel="stylesheet">
+	</head>
+	<body>
+		<center>
+		
+				<% if(query.invalid == "y"){ %>
+					<div class="tinyBox" style="padding:10;background-color:red;color:black;font-size:20">Invalid username or password!</div>
+				<% }else if(query.invalid == "a"){ %>
+					<div class="tinyBox" style="padding:10;background-color:red;color:black;font-size:20">You have to logged in to view this page!</div>
+				<% }else if(query.invalid == "i"){ %>
+					<div class="tinyBox" style="padding:10;background-color:red;color:black;font-size:20">You need to activate your account!</div>
+				<% } %>
+		
+
+			<h1>You should probably login...</h1>
+			
+
+			<% 
+
+				strings=[
+					"(To TinySpace if you weren't sure)",
+					"But we can't tell you what to do. <br> We aren't your father. "
+				];
+
+				i=getRandomNum(0,strings.length);
+
+			%>
+
+			<form action="/loginValidate">
+				<div class="tinyBox">
+					<%-strings[i]%><br><br>
+					<input type="text" name="username" class="tinyTextbox" placeholder="Username" style="width:30%"><br><br>
+					<input type="password" name="password" class="tinyTextbox" placeholder="Password" style="width:30%"><br>
+					<br><input type="checkbox" name="logged" value="true"><span style="font-size:15">Stay logged in</span>
+				</div><br>
+				
+				<input type="submit" class="tinyButton" value="Login!">
+			</form>
+			<div style="font-size: 10px;position: fixed;bottom: 10;width: 100%;">We have the <i>tiniest</i> space. How tiny is your space? Probably not this tiny.</div>
+		</center>
+			
+	</body>
+</html>

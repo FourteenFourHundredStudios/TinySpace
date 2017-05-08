@@ -1,0 +1,53 @@
+<html>
+<!--this is for the logout button at the top-->
+
+
+	<head>
+		<title>Look at these spaces!</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,300i,400,500,700,900" rel="stylesheet">
+		<link href="tinystyle.css" rel="stylesheet">
+	</head>
+	<body>
+		<center>
+		
+			<div style="font-size: small;margin-right: 10;" align="right">
+				<a href="logout.html">logout</a>
+				<a href="profile.html"><tiny>log(getSessionVal('username'))</tiny></a>
+			</div>
+	
+			<h1><span style="color:rgb(0, 216, 90)">Tiny</span>Space<span style="color:rgb(0, 216, 90)">.</span>co!</h1>
+			<!--div class="tinyBox" style="float:left; width:100%; overflow:hidden"-->
+
+			<div class="tinyBox" style=" float:left;width: 100%;overflow: auto;white-space: nowrap;">
+				<div>
+					<tiny>
+						data=param[0];
+							for(var i=0;i<data.length;i++){	
+								log(`
+										<div id="post1" onClick="javascript:location.href='vote?p=`+data[i].name+`'" class="tinyPostbox" style="margin:30px; height:30%;display:inline-block;word-wrap: break-word;white-space: normal;">
+										<div style="background-color:rgb(0, 216, 90)">
+											<h1 id="postTitle" style="padding:10px;margin: 0px;color:white;float:left;font-size:25">`+(data[i].name)+`</h1>
+											<hr style="margin:0;padding:0;width:100%; visibility: hidden;">
+										</div>
+										<div id="postContent" style="padding:10;width:100%;overflow:scroll;width:auto;height:120px;float:left">
+											`+(data[i].description)+`
+										</div>
+										<br>
+									</div>
+									`);								
+							}
+					</tiny>
+					<br>
+				
+				</div>
+				
+			</div>
+			
+<br><br><input type="button" class="tinyButton" value="I want to post something" onClick="javascript:location.href='/post'">
+
+			<div style="font-size: 10px;position: fixed;bottom: 10;width: 100%;">We have the <i>tiniest</i> space. How tiny is your space? Probably not this tiny.</div>
+		
+		</center>
+			
+	</body>
+</html>
