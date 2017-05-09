@@ -1,13 +1,3 @@
-function login(usernames,req,res){
-	req.session.username=usernames;
-                
-	db.collection("users").update(
-		{username: usernames },
-		{$set: {uid: req.sessionID } }
-	);
-
-	redirect("/spaces",res);
-}
 
 app.get("/validateaccount",function(req,res){
 	dbManager.getOne({status:req.query.c},"users",function(result,err){
@@ -26,12 +16,6 @@ app.get("/validateaccount",function(req,res){
 	});
 });
 
-function redirect(url,res){
-	res.writeHead(302, {
-		'Location': url
-	});
-	res.end();
-}
 
 app.get("/signupvalidate",function(req, res){
 //	dbSearch({username:params.username,email:params.email},"users",function(result,err){
@@ -115,7 +99,13 @@ app.get('/loginvalidate', function (req, res) {
 					return;
 				}
 				
+				page="/spaces";
 				
+				if(req.session.nextPage!=null){
+					page=req.session.nextPage;
+					req.session.nextPage=null;
+					
+				}
 
 				req.session.username=req.query.username;
                 
@@ -130,12 +120,12 @@ app.get('/loginvalidate', function (req, res) {
 					var CookieCode=sha1(Math.random()+"TINYTINY");
 
 						db.collection("users").update(
-							{username: params.username },
+							{username: req.query.username },
 							{$set: {session: CookieCode} }
 						);	
 
 					res.writeHead(302, {
-						'Location': "/spaces",
+						'Location': page,
 						//'Set-Cookie': 'tinySession='+sessionId+'; expires='+new Date(new Date().getTime()+(mins * 60 * 1000)).toUTCString(),
 						'Set-Cookie': 'stayLogged='+CookieCode+'; expires='+new Date(new Date().getTime()+(30*24*60 * 60 * 1000)).toUTCString()
 					});
@@ -143,7 +133,7 @@ app.get('/loginvalidate', function (req, res) {
 					return;
 				}
 				res.writeHead(302, {
-					'Location': "/spaces",
+					'Location': page,
 				});
 				res.end();
 				return;
