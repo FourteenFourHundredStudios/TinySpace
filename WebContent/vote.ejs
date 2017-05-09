@@ -52,6 +52,7 @@
 
 	var socket = io();
 
+	//console.log();
 
 	socket.on('postRight', function(msg){
 		//console.log(msg);
@@ -86,11 +87,11 @@
 	});
 
 	function good(){
-		socket.emit('getSpace',{space:"<tiny>log(currentParams.p)</tiny>",rate:"good"});
+		socket.emit('getSpace',{space:"<%=query.p%>",rate:"good",uid:'<%=uid%>'});
 	}
 
 	function bad(){
-		socket.emit('getSpace',{space:"<tiny>log(currentParams.p)</tiny>",rate:"bad"});
+		socket.emit('getSpace',{space:"<%=query.p%>",rate:"bad",uid:'<%=uid%>'});
 	}
 
 	good();

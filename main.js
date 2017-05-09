@@ -47,9 +47,10 @@ mongoUtil.connectToServer( function( err ) {
 
 
 app.use('/', express.static(path.join(__dirname, 'WebContent/public/')));
+app.use('/images', express.static(path.join(__dirname, 'WebContent/images/')));
 
 app.get('/', function (req, res) {
-     console.log(req.cookies); 
+     //console.log(req.cookies); 
      res.render(path.join(__dirname, 'WebContent/hello.ejs'));
 });
 
@@ -65,7 +66,17 @@ app.get('/spaces', function (req, res) {
 });
 
 app.get("/vote", function(req,res){
-    res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query});
+    //dbManager.getOne({username:req.session.username},"users",function(result,error){
+       // console.log("RESULT ID: "+result._id);
+        res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query,uid:req.sessionID});
+   // });
+});
+
+app.get("/post", function(req,res){
+    //dbManager.getOne({username:req.session.username},"users",function(result,error){
+       // console.log("RESULT ID: "+result._id);
+        res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,uid:req.sessionID});
+   // });
 });
 
 getRandomNum=function(min, max) {

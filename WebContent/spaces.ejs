@@ -25,7 +25,7 @@
 						//console.log(data);
 							for(var i=0;i<data.length;i++){	%>
 								
-								<div id="post1" onClick="javascript:location.href='vote?p=`+data[i].name+`'" class="tinyPostbox" style="margin:30px; height:30%;display:inline-block;word-wrap: break-word;white-space: normal;">
+								<div id="post1" onClick="javascript:location.href='vote?p=<%=data[i].name%>'" class="tinyPostbox" style="margin:30px; height:30%;display:inline-block;word-wrap: break-word;white-space: normal;">
 									<div style="background-color:rgb(0, 216, 90)">
 										<h1 id="postTitle" style="padding:10px;margin: 0px;color:white;float:left;font-size:25"><%=data[i].name%></h1>
 										<hr style="margin:0;padding:0;width:100%; visibility: hidden;">

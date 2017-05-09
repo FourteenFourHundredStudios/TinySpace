@@ -11,8 +11,8 @@
 			<h1>Make some great content!</h1>
 			
 
-			<tiny> 
-				//log(getSessionVal("username"));
+			<% 
+				
 				strings=[
 					"(But make sure it's tiny)",
 					"(Or don't, we can't tell you what to do)",
@@ -20,11 +20,11 @@
 
 				i=getRandomNum(0,strings.length);
 
-			</tiny>
+			%>
 
 				<div id="contentBanner" class="tinyBox"  style="height:40%">
 					<div id="postData"> 
-						<div id="message" style="padding:0;margin:0;border:0;display: inline-block;white-space:nowrap;"><tiny>log(strings[i]);</tiny></div>
+						<div id="message" style="padding:0;margin:0;border:0;display: inline-block;white-space:nowrap;"><%=strings[i]%></div>
 						<div id="error"></div>
 						<br>
 						<input type="text" id="catagory" name="catagory" class="tinyTextbox" placeholder="Post Catagory" ><br><br>
@@ -89,6 +89,7 @@
 						catagory:catagory.value,
 						title:title.value,
 						photo:imgData,
+						uid:"<%=uid%>"
 					}); 
 					return;
 				}
@@ -96,6 +97,7 @@
 					catagory:catagory.value,
 					title:title.value,
 					text:text.value,
+					uid:"<%=uid%>"
 				}); 
 			}
 		}

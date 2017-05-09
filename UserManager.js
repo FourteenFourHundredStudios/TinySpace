@@ -11,8 +11,14 @@ app.get('/loginvalidate', function (req, res) {
 				}
 				
 				
+
 				req.session.username=req.query.username;
                 
+				db.collection("users").update(
+					{username: req.query.username },
+					{$set: {uid: req.sessionID } }
+				);
+
                 mins=40;
 				if(req.query.logged=="true"){
 					console.log("checked!");
