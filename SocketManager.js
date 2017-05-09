@@ -149,9 +149,3 @@ function sendPost(socket,msg){
 	});
 	
 }
-
-
-function xssFilter(str){
-	console.log("FIX THIS BECAUSE THIS IS VERY INSECURE\nLove, Marc ❤️");
-	return str;
-}

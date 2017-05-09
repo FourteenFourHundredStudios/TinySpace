@@ -8,27 +8,28 @@
 <center>
     <br>
 
-    <tiny>
-        if(currentParams.invalid == "y"){
-            log('<div class="tinyBox" style="padding:10;background-color:red;color:black">This email or username is already in use!</div>');
-        }
-    </tiny>
+    <%if(query.invalid == "y"){%>
+        <div class="tinyBox" style="padding:10;background-color:red;color:black">This email or username is already in use!</div>
+    <%}else if(query.invalid == "n"){%>
+         <div class="tinyBox" style="padding:10;background-color:red;color:black">Could not send email!</div>
+    <%}%>
+
     <h1>Yay, you're signing up!</h1>
 
 
-    <tiny>
+    <%
 
         strings=[
-        "Pick a good username."
+            "Pick a good username."
         ];
 
         i=getRandomNum(0,strings.length);
 
-    </tiny>
+    %>
 
     <form action="/SignUpValidate">
         <div class="tinyBox">
-            <tiny>log(strings[i]);</tiny><br><br>
+            <%= strings[i]; %><br><br>
             <input type="text" name="email" class="tinyTextbox" placeholder="email" style="width:30%"><br><br>
             <input type="text" name="username" class="tinyTextbox" placeholder="Username" style="width:30%"><br><br>
             <input type="password" name="password" class="tinyTextbox" placeholder="Password" style="width:30%"><br>

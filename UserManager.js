@@ -1,3 +1,108 @@
+function login(usernames,req,res){
+	req.session.username=usernames;
+                
+	db.collection("users").update(
+		{username: usernames },
+		{$set: {uid: req.sessionID } }
+	);
+
+	redirect("/spaces",res);
+}
+
+app.get("/validateaccount",function(req,res){
+	dbManager.getOne({status:req.query.c},"users",function(result,err){
+		if(result){
+			//MongoClient.connect(url, function(err, db) {
+				db.collection('users').update(
+ 					{status:req.query.c},
+ 					{$set : {"status" : "active"}}
+				);
+
+				login(result.username,req,res);
+		//	});
+		}else{
+			redirect("error.html",res);
+		}
+	});
+});
+
+function redirect(url,res){
+	res.writeHead(302, {
+		'Location': url
+	});
+	res.end();
+}
+
+app.get("/signupvalidate",function(req, res){
+//	dbSearch({username:params.username,email:params.email},"users",function(result,err){
+		code=sha1(Math.random());
+		//sucsess
+	
+			dbManager.append('users',{
+				username:xssFilter(req.query.username),
+				password:sha1(req.query.password),
+				email:xssFilter(req.query.email),
+				score:0,
+				status:code,
+				upVotes:[],
+				downVotes:[],
+			},function(er, result){
+				console.error(er);
+				if(er){
+					res.writeHead(302, {
+						'Location': "/signup?invalid=y"
+					});
+					res.end();
+				}
+
+				transporter = nodemailer.createTransport({
+					service: 'gmail',
+					auth: {
+						user: 'tinyspace.co@gmail.com',
+						pass: 'Phylum123'
+					}
+				});
+
+				urls="http://tinyspace.co";
+				if(debug){
+					urls="http://localhost:8090";
+				}
+
+				mailOptions = {
+					from: 'TinySpace! 😉 <tinyspace.co@gmail.com>', // sender address
+					to: req.query.email, // list of receivers
+					subject: 'Activate your TinySpace account!', // Subject line
+					text: 'Click here to active your account ', // plain text body
+					html: 'Click here to active your account <br><br> <a href="'+urls+'/validateAccount?c='+code+'">here</a>' // html body
+				};
+
+				transporter.sendMail(mailOptions, (error, info) => {
+					if (error) {
+						res.writeHead(302, {
+							'Location': "/SignUp?invalid=n"
+						});
+						res.end();
+						console.log(error);
+						return;
+					}else{
+						res.writeHead(302, {
+							'Location': "/val.html"
+						});
+						res.end();
+					}
+					//console.log('Message %s sent: %s', info.messageId, info.response);
+				});
+
+				
+				
+			});
+		
+
+	
+//	});
+
+});
+
 app.get('/loginvalidate', function (req, res) {
     dbManager.getOne({username:req.query.username},"users",function(e,err){	
 		if(e){

@@ -30,6 +30,8 @@ nodemailer = require('nodemailer');
 session = require('express-session');
 cookieParser = require('cookie-parser');
 
+debug=true;
+
 app.use(cookieParser());
 app.use(session({
     secret: "veryverytiny",
@@ -56,6 +58,10 @@ app.get('/', function (req, res) {
 
 app.get('/login', function (req, res) {
      res.render(path.join(__dirname, 'WebContent/login.ejs'),{query : req.query});
+});
+
+app.get('/signup', function (req, res) {
+     res.render(path.join(__dirname, 'WebContent/SignUp.ejs'),{query : req.query});
 });
 
 app.get('/spaces', function (req, res) {
@@ -93,3 +99,20 @@ app.listen(8090, function () {
 server.listen(8090,function(){
     console.log('TinySpace listening on port 8090!')
 });
+
+xssFilter=function(str){
+    fixes=[
+        ["<","&lt;"],
+        [">","&gt;"],
+        ['"',"&#39;"],
+        ["'","&#34;"]
+    ];
+
+    for(var i=0;i<fixes.length;i++){
+        while(str.indexOf(fixes[i][0])!=-1){
+            str=str.replace(fixes[i][0],fixes[i][1]);
+        }
+    }
+    
+    return str;
+}
