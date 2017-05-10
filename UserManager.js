@@ -88,9 +88,13 @@ app.get("/signupvalidate",function(req, res){
 });
 
 app.get('/loginvalidate', function (req, res) {
+	//console.log("HERE");
     dbManager.getOne({username:req.query.username},"users",function(e,err){	
+		
 		if(e){
+			
 			if(sha1(req.query.password)===e.password){
+				
 				if(e.status!="active"){
 					res.writeHead(302, {
 						'Location': "/login?invalid=i"
@@ -103,8 +107,7 @@ app.get('/loginvalidate', function (req, res) {
 				
 				if(req.session.nextPage!=null){
 					page=req.session.nextPage;
-					req.session.nextPage=null;
-					
+					req.session.nextPage=null;	
 				}
 
 				req.session.username=req.query.username;
@@ -147,3 +150,4 @@ app.get('/loginvalidate', function (req, res) {
      
 
 });
+

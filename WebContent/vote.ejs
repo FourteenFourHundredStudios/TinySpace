@@ -12,6 +12,11 @@
 			
 			<b>
 			<span style="color:rgb(0, 216, 90)">/</span>
+				<%
+					if (typeof pageName !== 'undefined') {
+						query.p=pageName;
+					}
+				%>
 				<%=query.p%>
 			</b>
 			<br><br>

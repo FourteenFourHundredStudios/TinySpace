@@ -102,7 +102,7 @@ io.on('connection', function(socket){
 });
  
 function sendPost(socket,msg){
-	console.log(msg.space);
+	
 	dbManager.getRand({catagory:msg.space},"spaces",function(data,e){
 		
 		//console.log("DATA: "+data);
@@ -110,7 +110,7 @@ function sendPost(socket,msg){
 		if(data[0]!=undefined){
             dbManager.getOne({uid:msg.uid},"users",function(result,error){
 
-                console.log(msg.uid);
+  
 
 	    		if(result.lastPost!=null){
 				//MongoClient.connect(url, function(err, db) {
