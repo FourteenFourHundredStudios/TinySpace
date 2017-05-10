@@ -70,6 +70,7 @@ mongoUtil.connectToServer( function( err ) {
         url=req.originalUrl.substring(1);
         dbManager.getOne({name:url},"spacelist",function(data,error){ 
             onUserValidated(req,res,function(){
+                //console.log(url);
                 if(data){
                     res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query,uid:req.sessionID,pageName:url});
                     res.end();
@@ -88,6 +89,11 @@ app.use('/images', express.static(path.join(__dirname, 'WebContent/images/')));
 app.get('/', function (req, res) {
      //console.log(req.cookies); 
      res.render(path.join(__dirname, 'WebContent/hello.ejs'));
+});
+
+app.get('*.ico', function (req, res) {
+    res.send("nah");
+    res.end();
 });
 
 app.get('/login', function (req, res) {
@@ -134,31 +140,25 @@ app.get("/post", function(req,res){
 });
 
 function onUserValidated(req,res,callback){
-    //console.log(req.cookies.stayLogged);
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){
         dbManager.getOne({session:req.cookies.stayLogged},"users",function(result,error){
-            
             if(result){
-                req.session.username=result.username;
-                    
+                req.session.username=result.username;                
                 db.collection("users").update(
                     {username: result.username },
                     {$set: {uid: req.sessionID } }
                 );
                 redirect(req.originalUrl,res); 
             }else{
-                console.log(":(")
+                res.send("👀😂😏");
+                res.end();
             }
-            
         });
     }else{
-        //console.log("ses user: "+req.session.username);
         if (req.session.username!=undefined){
             callback();
-        }else{
-            
+        }else{          
             req.session.nextPage=req.originalUrl;
-           // console.log("next page: "+req.session.nextPage);
             redirect("/login?invalid=a",res); 
         }
     }
@@ -173,26 +173,6 @@ server.listen(8090,function(){
     console.log('TinySpace listening on port 8090!')
 });
 
-/*
-app.use(function(req,res){
-    console.log("test");
-
-    
-    url=req.originalUrl.substring(1);
-    dbManager.getOne({name:url},"spacelist",function(data,error){ 
-        onUserValidated(req,res,function(){
-            if(data){
-            
-                res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query,uid:req.sessionID,pageName:url});
-                res.end();
-              
-                
-            }else{
-                redirect("error.html",res);
-            }
-        });
-    });
-});*/
 
 
 
