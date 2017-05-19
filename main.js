@@ -150,7 +150,7 @@ function onUserValidated(req,res,callback){
                 );
                 redirect(req.originalUrl,res); 
             }else{
-                res.send("👀😂😏");
+                res.send("invalid cookie 👀😂😏");
                 res.end();
             }
         });
