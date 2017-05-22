@@ -1,0 +1,61 @@
+ hr { 
+        background-color: rgb(232,232,232); 
+        height: 1px; 
+        border: 0;
+        margin:0px;
+     }
+
+    .postButton{
+        background-color:rgb(232, 232, 232);
+        border:0;
+        height:100%;
+        margin:0;   
+    }
+
+    .postButton:focus {
+        outline: none; 
+    }
+
+    .postButton:hover{
+        background-color:rgb(212, 212, 212); 
+    }  
+
+    .postHeading{
+        color:white;
+        width:100%;
+        margin:0px;
+    }
+
+    .post{
+        outline:1px solid rgb(232,232,232);
+    }
+
+    .post h2{
+        margin:0px;
+        padding:15px;
+    }
+
+    .postContent{
+        background-color:white;
+        width:100%;
+        margin:0px
+    }
+
+    .postText{
+        padding:20px;color:grey
+    }
+
+    .postTextBox{
+        background-color:rgb(245,245,245);
+        border:0;
+        height:100%;
+        margin:0; 
+        margin:0xp;
+        height:5px;
+        padding:15px;
+        width:100%;
+    }
+
+    .postTextBox:focus {
+        outline: none; 
+    }

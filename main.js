@@ -33,6 +33,7 @@ cookieParser = require('cookie-parser');
 debug=true;
 alpha=true;
 
+
 /*
 var spaceDirector = function(req, res, next) {          
     url=req.originalUrl.substring(1);
@@ -66,11 +67,12 @@ mongoUtil.connectToServer( function( err ) {
      userManager=require('./UserManager.js');
      dbManager=require('./DBManager.js');
      socketManager=require('./SocketManager.js');
+
+     /*
      app.get("/:space", function(req,res){
         url=req.originalUrl.substring(1);
         dbManager.getOne({name:url},"spacelist",function(data,error){ 
             onUserValidated(req,res,function(){
-                //console.log(url);
                 if(data){
                     res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query,uid:req.sessionID,pageName:url});
                     res.end();
@@ -79,7 +81,7 @@ mongoUtil.connectToServer( function( err ) {
                 }
             });
         });
-    });
+    });*/
 
 });
 
@@ -88,7 +90,7 @@ app.use('/images', express.static(path.join(__dirname, 'WebContent/images/')));
 
 app.get('/', function (req, res) {
      //console.log(req.cookies); 
-     res.render(path.join(__dirname, 'WebContent/hello.ejs'));
+     res.render(path.join(__dirname, 'WebContent/index.ejs'));
 });
 
 app.get('*.ico', function (req, res) {
@@ -119,23 +121,11 @@ app.get('/signup', function (req, res) {
     
 });
 
-app.get('/spaces', function (req, res) {
-    dbManager.get({},"spacelist",function(result,error){
-        onUserValidated(req,res,function(){
-            res.render(path.join(__dirname, 'WebContent/spaces.ejs'),{query : req.query,username:req.session.username,data:result});
-        });
-    });
-});
 
-app.get("/vote", function(req,res){
-    onUserValidated(req,res,function(){
-        res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query,uid:req.sessionID});
-    });
-});
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
-        res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,uid:req.sessionID});
+        res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID});
     });
 });
 
@@ -150,7 +140,7 @@ function onUserValidated(req,res,callback){
                 );
                 redirect(req.originalUrl,res); 
             }else{
-                res.send("invalid cookie 👀😂😏");
+                res.send("Nice try bud 🍪👀😂😏");
                 res.end();
             }
         });

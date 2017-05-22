@@ -1,0 +1,56 @@
+<html>
+    <body style="background-color:rgb(249, 249, 249);font-family:sans-serif;padding:20px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+        <center>
+            <head> 
+                <script type="text/javascript" src="socketio.js"></script>
+                <link rel="stylesheet" type="text/css" href="PostStyle.css">
+                <title>Test Page!</title>
+
+                <style>
+                .collapse{
+                     overflow:hidden;
+                    
+                   -moz-transition: height 0.5s ease-in-out;
+				    -ms-transition: height 0.5s ease-in-out;
+			    	-o-transition: height 0.5s ease-in-out;
+			    	-wsebkit-transition: height 0.5s ease-in-out;
+			    	transition: height 0.5s;
+                }
+                </style>
+                   
+                
+
+                
+            </head>
+            <br><br><br>
+            <div id="post">
+                <div class="post" style="width:30%;">
+                    <div class="postHeading" style="background-color:#5082e5;">
+                        <h2 align="center">Login to TinySpace.co!</h2>
+                    </div>
+                    <div id="col" class="collapse">
+                        <hr>
+                        <input id="username" type="text" placeholder="Post title!"  class="postTextBox">
+                        <hr>
+                        <input id="password" type="text"  placeholder="Post tags go here (optional)"  class="postTextBox">
+                    </div>
+                </div>
+                <br>
+                <input class="postButton" style="height:4%;width:15%;" type="button" value="signup" onClick="">
+                <input class="postButton" style="height:4%;width:15%;" type="button" value="login" onClick="login()">
+            </div>
+        </center>
+    </body>
+</html>
+
+<script type="text/javascript">
+
+    document.getElementById("col").style.height=document.getElementById("col").clientHeight+"px";
+    console.log(document.getElementById("col").style.height);
+
+
+    function login(){
+       document.getElementById("col").style.height=0;
+   }
+
+</script>

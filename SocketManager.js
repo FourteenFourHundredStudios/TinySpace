@@ -1,7 +1,7 @@
 
 
 io.on('connection', function(socket){
-	//console.log('a user connected');
+	console.log('a user connected');
 	socket.on('disconnect', function(){
 		//console.log('user disconnected');
 		//db.close();
@@ -9,36 +9,25 @@ io.on('connection', function(socket){
 	socket.on('getSpace', function(msg){
 		sendPost(socket,msg);
 	});
-	socket.on('sendSpace', function(msg){
+	socket.on('submit', function(msg){
 		try{
-			//MongoClient.connect(url, function(err, db) {
-
-				dbManager.getOne({name:msg.catagory},"spacelist",function(data){ 
-					if(data){	
-						dbManager.getOne({uid:msg.uid},"users",function(result,error){
-							if(result){
-								db.collection('spaces').insertOne({
-									username:result.username,
-									rating:0,
-									catagory:xssFilter(msg.catagory),
-									type:"text",
-									title:xssFilter(msg.title),
-									content:xssFilter(msg.text)
-								});
-								socket.emit("postSent","good!");
-							}else{
-								socket.emit("postError",{errorMessage:"Invalid session ID 😉"});
-							}
-						});
-					}else{
-						socket.emit("postError",{errorMessage:"'"+xssFilter(msg.catagory)+"' is not a catagory!"});
-						return;
-					}
-				});
-			//});
+			console.log("SID: "+msg.tags);
+			dbManager.getOne({uid:msg.sid},"users",function(result,error){
+				//TODO handle if session id is not tied to username
+				dbManager.insert("queries",{
+					username:result.username,
+					title:msg.title,
+					content:msg.content,
+					tags:msg.tags.replace(" ,",",").replace(", ",",").replace(",",",").split(","),
+					date:new Date(),
+					url:sha1(msg.url),
+				},function(){
+					socket.emit("postSent",{message:"Post was sent! 👌"});
+				})
+			});
+			
 		}catch(err){
-	
-			socket.emit("postError",{errorMessage:err.toString()});
+			socket.emit("postError",{message:err.toString()});
 			return;
 		}
 	});
