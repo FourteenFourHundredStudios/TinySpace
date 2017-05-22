@@ -18,6 +18,11 @@
 
     .postButton:hover{
         background-color:rgb(212, 212, 212); 
+        -moz-transition: width 0.2s ease-in-out;
+		-ms-transition: width 0.2s ease-in-out;
+		-o-transition: width 0.2s ease-in-out;
+		-wsebkit-transition: width 0.2s ease-in-out;
+		transition: width 0.2s;
     }  
 
     .postHeading{
@@ -30,7 +35,7 @@
         outline:1px solid rgb(232,232,232);
     }
 
-    .post h2{
+    .post h1, h2, h3, h4, h5, h6{
         margin:0px;
         padding:15px;
     }
@@ -50,10 +55,21 @@
         border:0;
         height:100%;
         margin:0; 
-        margin:0xp;
         height:5px;
         padding:15px;
         width:100%;
+    }
+
+
+    .postTextBox[type="password"]{
+        /*for some reason, post text boxes need there own special styling*/
+        background-color:rgb(245,245,245);
+        border:0;
+        height:30px;
+        margin:0;   
+        padding:0px;
+        width:100%;
+        padding-left: 15px;
     }
 
     .postTextBox:focus {

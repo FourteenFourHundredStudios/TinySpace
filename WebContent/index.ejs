@@ -5,22 +5,16 @@
                 <script type="text/javascript" src="socketio.js"></script>
                 <link rel="stylesheet" type="text/css" href="PostStyle.css">
                 <title>Test Page!</title>
-
                 <style>
-                .collapse{
-                     overflow:hidden;
-                    
-                   -moz-transition: height 0.5s ease-in-out;
-				    -ms-transition: height 0.5s ease-in-out;
-			    	-o-transition: height 0.5s ease-in-out;
-			    	-wsebkit-transition: height 0.5s ease-in-out;
-			    	transition: height 0.5s;
-                }
+                    .collapse{
+                        overflow:hidden;
+                        -moz-transition: height 0.2s ease-in-out;
+                        -ms-transition: height 0.2s ease-in-out;
+                        -o-transition: height 0.2s ease-in-out;
+                        -wsebkit-transition: height 0.2s ease-in-out;
+                        transition: height 0.2s;
+                    }
                 </style>
-                   
-                
-
-                
             </head>
             <br><br><br>
             <div id="post">
@@ -28,16 +22,18 @@
                     <div class="postHeading" style="background-color:#5082e5;">
                         <h2 align="center">Login to TinySpace.co!</h2>
                     </div>
-                    <div id="col" class="collapse">
-                        <hr>
-                        <input id="username" type="text" placeholder="Post title!"  class="postTextBox">
-                        <hr>
-                        <input id="password" type="text"  placeholder="Post tags go here (optional)"  class="postTextBox">
-                    </div>
+                    <form id="userform" action="/loginvalidate">
+                        <div id="col" class="collapse">
+                            <hr><input name="username" id="username" type="text" placeholder="Username"  class="postTextBox">
+                            <hr><input name="password" type="password" class="postTextBox" placeholder="Password" id="password">
+                        </div>
+                    </form>
                 </div>
                 <br>
-                <input class="postButton" style="height:4%;width:15%;" type="button" value="signup" onClick="">
-                <input class="postButton" style="height:4%;width:15%;" type="button" value="login" onClick="login()">
+                <div id="buttons" style="overflow:hidden;">
+                    <input class="postButton" id="signupButton" style="height:4%;width:15%;" type="button" value="signup" onClick="signup()">
+                    <input class="postButton" id="loginButton" style="height:4%;width:15%;" type="button" value="login" onClick="login()">
+                </div>
             </div>
         </center>
     </body>
@@ -45,12 +41,80 @@
 
 <script type="text/javascript">
 
-    document.getElementById("col").style.height=document.getElementById("col").clientHeight+"px";
-    console.log(document.getElementById("col").style.height);
+    socket = io();
 
+    state="login"
+    get("col").style.height=get("col").clientHeight+"px";
 
     function login(){
-       document.getElementById("col").style.height=0;
-   }
+        
+        if(state!="login"){
+            get("col").style.height=0;
+            window.setTimeout(function(){
+                get("col").innerHTML="";
+                get("col").innerHTML+='<input name="username" type="text" id="username" placeholder="Username"  class="postTextBox" ><hr>';
+                get("col").innerHTML+='<input name="password" type="password" id="password" placeholder="Password"  class="postTextBox"><hr>';
+                get("col").style.height= get("username").clientHeight*2;
+                get("signupButton").value="signup";
+            },250);
+        }else{
+            signin();
+        }
+
+        state="login";
+    }
+
+    function signup(){
+        if(state!="signup"){
+            get("col").style.height=0;
+            window.setTimeout(function(){
+                get("col").innerHTML="";
+                get("col").innerHTML+='<input type="text" id="username" placeholder="Username"  class="postTextBox" ><hr>';
+                get("col").innerHTML+='<input type="password" id="password" placeholder="Password"  class="postTextBox"><hr>';
+                get("col").innerHTML+='<input type="password" id="password2" placeholder="Repeat Password"  class="postTextBox"><hr>';
+                get("col").innerHTML+='<input type="text" id="email" placeholder="Email Address"  class="postTextBox">';
+                get("col").style.height= get("username").clientHeight*4;
+                get("signupButton").value="Create Account!";
+            },250);
+        }else{
+            createAccount();
+        }
+        state="signup";
+    }
+
+    function createAccount(){
+       
+    }
+
+    function signin(){
+        socket.emit("login",{
+            username:get("username").value,
+            password:get("password").value
+        });
+    }
+
+    socket.on('login', function(msg){
+		if(msg.result=="valid"){
+            get("userform").submit();
+        }else{
+            invalid();
+        }
+	});
+
+    function get(u){
+        return document.getElementById(u);
+    }
+
+    function invalid(){
+        get("col").style.height=0;
+        window.setTimeout(function(){
+            get("col").innerHTML="";
+            get("col").innerHTML+='<div id="errorheading" class="postHeading" style="background-color:red"><h4 style="padding:5px" align="center">Invalid username or password!</h3></div>';
+            get("col").innerHTML+='<input type="text" id="username" placeholder="Username"  class="postTextBox" ><hr>';
+            get("col").innerHTML+='<input type="password" id="password" placeholder="Password"  class="postTextBox"><hr>';
+            get("col").style.height=get("username").clientHeight*2+get("errorheading").clientHeight;
+            
+        },250);
+    }
 
 </script>
