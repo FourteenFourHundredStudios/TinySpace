@@ -5,23 +5,13 @@ path = require('path');
 urlLib = require('url');
 sha1 = require('sha1');
 express = require('express');
-
+wildcardSubdomains = require('wildcard-subdomains')
 app = express();
 server = require('http').Server(app);
 io = require('socket.io')(server);
 
-//server.listen(80);
 
-/*
-
-app = express();
-
-server = http.createServer(app);
-io = require('socket.io')(server);*/
-
-
-//app = express()
-http = require('http')
+http = require('http');
 server = http.createServer(app)
 io = require('socket.io').listen(server);
 
@@ -33,6 +23,17 @@ cookieParser = require('cookie-parser');
 debug=true;
 alpha=true;
 
+app.use(wildcardSubdomains({
+  namespace: 's',
+  whitelist: ['www', 'app'],
+}));
+
+app.get('/s/*/', function(req, res){
+
+    var domain=req.headers.host.split(":")[0];
+    subdomain=domain.substring(0,domain.indexOf("."));
+    res.send("subdomain: "+subdomain);
+});
 
 /*
 var spaceDirector = function(req, res, next) {          
@@ -68,20 +69,21 @@ mongoUtil.connectToServer( function( err ) {
      dbManager=require('./DBManager.js');
      socketManager=require('./SocketManager.js');
 
-     /*
+     
      app.get("/:space", function(req,res){
         url=req.originalUrl.substring(1);
-        dbManager.getOne({name:url},"spacelist",function(data,error){ 
+        console.log("url: "+url);
+        dbManager.getOne({url:url},"queries",function(data,error){ 
             onUserValidated(req,res,function(){
                 if(data){
-                    res.render(path.join(__dirname, 'WebContent/vote.ejs'),{query : req.query,uid:req.sessionID,pageName:url});
+                    res.render(path.join(__dirname, 'WebContent/query.ejs'),{query : req.query,uid:req.sessionID,qid:url,q:data});
                     res.end();
                 }else{
                     redirect("error.html",res);
                 }
             });
         });
-    });*/
+    });
 
 });
 

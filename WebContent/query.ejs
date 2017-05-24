@@ -1,0 +1,25 @@
+<html>
+    <head> 
+        <script type="text/javascript" src="socketio.js"></script>
+        <link rel="stylesheet" type="text/css" href="PostStyle.css">
+        <title>Query</title>
+    </head>
+    <body style="background-color:rgb(249, 249, 249);font-family:sans-serif;padding:20px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+        <center>
+            
+             <div class="post" style="width:20%;">
+            <div class="postHeading" style="background-color:#5082e5;">
+                <h2 align="center"><%=q.title%></h2>
+            </div>
+            <div class="postContent">
+                <div class="postText">
+                    <%=q.content%>
+                </div>
+            </div>
+            <hr>
+            <input type="text" placeholder="Answer this question!"  class="postTextBox">
+        </div>
+
+        </center>
+    </body>
+</html>

@@ -19,7 +19,7 @@ io.on('connection', function(socket){
 
 	socket.on('submit', function(msg){
 		try{
-			console.log("SID: "+msg.tags);
+			//console.log("SID: "+msg.tags);
 			dbManager.getOne({uid:msg.sid},"users",function(result,error){
 				//TODO handle if session id is not tied to username
 				dbManager.insert("queries",{
@@ -28,7 +28,7 @@ io.on('connection', function(socket){
 					content:msg.content,
 					tags:msg.tags.replace(" ,",",").replace(", ",",").replace(",",",").split(","),
 					date:new Date(),
-					url:sha1(msg.url),
+					url:Math.random().toString(36).substring(15),
 				},function(){
 					socket.emit("postSent",{message:"Post was sent! 👌"});
 				})
