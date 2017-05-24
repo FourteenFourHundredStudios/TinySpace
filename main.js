@@ -1,4 +1,6 @@
 //http = require('http');
+/* jshint node: true */
+
 util = require('util');
 fs = require('fs');
 path = require('path');
@@ -36,6 +38,7 @@ app.get('/s/*/', function(req, res){
 });
 
 /*
+
 var spaceDirector = function(req, res, next) {          
     url=req.originalUrl.substring(1);
     dbManager.getOne({name:url},"spacelist",function(data,error){ 
