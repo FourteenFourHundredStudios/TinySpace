@@ -134,6 +134,15 @@ app.get("/post", function(req,res){
     });
 });
 
+app.get("/all", function(req,res){
+    res.render(path.join(__dirname, 'WebContent/all.ejs'),{query : req.query,sessionID:req.sessionID});
+});
+
+app.get("/leaderboard", function(req,res){
+    res.render(path.join(__dirname, 'WebContent/leaderboard.ejs'),{query : req.query,sessionID:req.sessionID});
+});
+
+
 function onUserValidated(req,res,callback){
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){
         dbManager.getOne({session:req.cookies.stayLogged},"users",function(result,error){
