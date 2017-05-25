@@ -3,15 +3,18 @@
  */
 
 
-exports.getResult = function (str) {
+exports.getResult = function (str,callback) {
     //var str = "giber doggo"
-    var res = str.split(" ")
-    console.log(res)
-    for (var i =0; i<res.length; i++){
-        dbManager.get({tags: res[i]}, "queries", function (doc, err) {
-            console.log(doc)
-        })
-    }
+    var tags = str.split(" ");
+    var result = [];
+  //  console.log(res)
+   // for (var i =0; i<tags.length; i++){
+        dbManager.get({tags:{"$in":tags}}, "queries", function (doc, err) {
+            //console.log(doc)
+            //result.push(doc)
+            callback(doc);
+        });
+  //  }
 
 
 }

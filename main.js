@@ -12,7 +12,6 @@ app = express();
 server = require('http').Server(app);
 io = require('socket.io')(server);
 
-
 http = require('http');
 server = http.createServer(app)
 io = require('socket.io').listen(server);
@@ -36,8 +35,8 @@ app.get('/s/*/', function(req, res){
     res.send("subdomain: "+subdomain);
 });
 
-/*
 
+/*
 var spaceDirector = function(req, res, next) {          
     url=req.originalUrl.substring(1);
     dbManager.getOne({name:url},"spacelist",function(data,error){ 
@@ -52,7 +51,6 @@ var spaceDirector = function(req, res, next) {
     next(); 
 }
 app.use(spaceDirector); */
-
 
 
 app.use(cookieParser());
@@ -72,8 +70,6 @@ mongoUtil.connectToServer( function( err ) {
      socketManager=require('./SocketManager.js');
      search = require("./search");
 
-     search.getResult();
-     
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
         dbManager.get({url:url},"answers",function(answers,error){ 
@@ -113,9 +109,6 @@ app.get('/', function (req, res) {
      res.render(path.join(__dirname, 'WebContent/index.ejs'));
 });
 
-app.get('/search', function (req, res) {
-     res.render(path.join(__dirname, 'WebContent/search.ejs'));
-});
 
 app.get('*.ico', function (req, res) {
     res.send("nah");
@@ -148,6 +141,16 @@ app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
         navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
         ejs.renderFile(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID},function(err,result){
+            res.send(navbar+result);
+        });
+    });
+});
+
+app.get('/search', function (req, res) {
+    navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html")
+    search.getResult("doggo bad", function(posts){
+       // console.log("POST: "+posts[0].title);
+        ejs.renderFile(path.join(__dirname, 'WebContent/search.ejs'), {links:posts},function (err,result) {
             res.send(navbar+result);
         });
     });
