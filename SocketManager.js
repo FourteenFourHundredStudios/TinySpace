@@ -17,6 +17,31 @@ io.on('connection', function(socket){
 		});
 	});
 
+	socket.on('join', function(pathname) {
+        socket.join(pathname);
+    });
+
+	socket.on('answer', function(msg){
+		var postData=null;
+		try{
+			dbManager.getOne({uid:msg.sid},"users",function(result,error){
+				postData={username:result.username,userscore:result.score,content:msg.content};
+				dbManager.insert("answers",{
+					username:result.username,
+					url:msg.url,
+					content:msg.content,
+					date:new Date()
+				},function(){
+					socket.emit("postSent",{message:"Question was answered 😎👌"});
+					io.to(url).emit('newAnswer', postData);
+				});
+			});
+		}catch(err){
+			socket.emit("postError",{message:err.toString()});
+			return;
+		}
+	});
+
 	socket.on('submit', function(msg){
 		try{
 			//console.log("SID: "+msg.tags);
@@ -31,7 +56,7 @@ io.on('connection', function(socket){
 					url:Math.random().toString(36).substring(15),
 				},function(){
 					socket.emit("postSent",{message:"Post was sent! 👌"});
-				})
+				});
 			});
 			
 		}catch(err){
