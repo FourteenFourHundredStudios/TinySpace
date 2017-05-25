@@ -73,8 +73,8 @@ mongoUtil.connectToServer( function( err ) {
      socketManager=require('./SocketManager.js');
 
      
-     app.get("/:space", function(req,res){
-        url=req.originalUrl.substring(1);
+     app.get("/q/:space", function(req,res){
+        url=req.originalUrl.substring(3);
         console.log("url: "+url);
         dbManager.getOne({url:url},"queries",function(data,error){ 
             onUserValidated(req,res,function(){
@@ -82,7 +82,8 @@ mongoUtil.connectToServer( function( err ) {
                     res.render(path.join(__dirname, 'WebContent/query.ejs'),{query : req.query,uid:req.sessionID,qid:url,q:data});
                     res.end();
                 }else{
-                    redirect("error.html",res);
+                    //redirect("error.html",res);
+                    res.send("error");
                 }
             });
         });
@@ -135,6 +136,19 @@ app.get("/post", function(req,res){
     });
 });
 
+<<<<<<< HEAD
+=======
+app.get("/all", function(req,res){
+    dbManager.get({},"queries",function(result,error){
+        res.render(path.join(__dirname, 'WebContent/all.ejs'),{query:req.query,sessionID:req.sessionID,links:result});
+    });
+});
+
+app.get("/leaderboard", function(req,res){
+    res.render(path.join(__dirname, 'WebContent/leaderboard.ejs'),{query : req.query,sessionID:req.sessionID});
+});
+
+>>>>>>> master
 
 function onUserValidated(req,res,callback){
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){

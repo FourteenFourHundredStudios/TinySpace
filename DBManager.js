@@ -38,11 +38,12 @@
 
  exports.getRand=function(search,dbDocument,callback) {
 
-     // MongoClient.connect(url, function(err, db) {
-
-     db.collection(dbDocument).aggregate([{$match: search}, {$sample: {size: 1}}], function (err, doc) {
-
-         callback(doc, err);
-         // db.close();
-     });
-    }
+   // MongoClient.connect(url, function(err, db) {
+        
+        db.collection(dbDocument).aggregate([{$match : search},{ $sample: { size: 1 } }],function(err, doc){
+            
+             callback(doc,err);
+            // db.close();
+        });
+     
+}
