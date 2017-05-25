@@ -9,7 +9,7 @@
      });
 
      //});
- }
+ };
 
 
  exports.getOne=function(search,dbDocument,callback){
@@ -24,14 +24,14 @@
         console.error(err);
         callback(undefined,err);
     }
-}
+};
 
  exports.get=function(search,dbDocument,callback){
    // MongoClient.connect(url, function(err, db) {
         db.collection(dbDocument).find(search).toArray(function(err, doc) {
             callback(doc,err);
         });
-}
+};
 
 //db.getCollection('spaces').aggregate([{$match : {catagory:"general"}},{ $sample: { size: 1 } }])
 
@@ -46,4 +46,4 @@
             // db.close();
         });
      
-}
+};

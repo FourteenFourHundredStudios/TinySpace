@@ -26,8 +26,7 @@ debug=true;
 alpha=true;
 
 app.use(wildcardSubdomains({
-  namespace: 's',
-  whitelist: ['www', 'app'],
+  namespace: 's', whitelist: ['www', 'app'],
 }));
 
 app.get('/s/*/', function(req, res){
@@ -71,7 +70,9 @@ mongoUtil.connectToServer( function( err ) {
      userManager=require('./UserManager.js');
      dbManager=require('./DBManager.js');
      socketManager=require('./SocketManager.js');
+     search = require("./search");
 
+     search.getResult();
      
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
