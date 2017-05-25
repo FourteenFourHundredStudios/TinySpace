@@ -94,17 +94,33 @@
     socket.emit('join', location.pathname.substring(3));
 
     socket.on('newAnswer', function(msg){
-        console.log(msg);
+
+        if($( "#noanswers" ).length){
+            $("#noanswers").fadeOut(function(){
+                post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
+                    <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
+                    <div style="margin:5px"></div>
+                        `+msg.content+`
+                        <br>
+                    </div><hr>`;
+
+            
+                $(post).hide().prependTo("#answers").fadeIn(1000);
+            });
+        }else{
+            post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
+                    <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
+                    <div style="margin:5px"></div>
+                        `+msg.content+`
+                        <br>
+                    </div><hr>`;
+
+            
+                $(post).hide().prependTo("#answers").fadeIn(1000);
+        }
 
         
-		post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
-                <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
-                <div style="margin:5px"></div>
-                    `+msg.content+`
-                     <br>
-                </div><hr>`;
-
-        $(post).hide().prependTo("#answers").fadeIn(1000);
+		
 	});
 
     function answer(e){
