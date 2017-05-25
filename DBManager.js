@@ -1,10 +1,6 @@
  db = mongoUtil.getDb();
 
  exports.insert=function(doc,value,cb){
-
-//doc is the table, valuve is the value, cb is callback
- exports.append=function(doc,value,cb) {
-
      // MongoClient.connect(url, function(err, db) {
 
      db.collection(doc).insertOne(value, function (er, result) {
@@ -49,6 +45,5 @@
              callback(doc,err);
             // db.close();
         });
-   // });
-
+     
 }
