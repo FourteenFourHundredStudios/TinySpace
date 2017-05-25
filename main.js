@@ -131,13 +131,19 @@ app.get('/signup', function (req, res) {
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
-        res.sendFile(path.join(__dirname, "WebContent/search.html"))
-        res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID});
+        //res.sendFile(path.join(__dirname, "WebContent/public/navbar.html"))
+        //res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID});
+        navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
+        ejs.renderFile(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID},function(err,result){
+            //console.log(result);
+            res.send(navbar+result);
+        });
+
+
     });
 });
 
-<<<<<<< HEAD
-=======
+
 app.get("/all", function(req,res){
     dbManager.get({},"queries",function(result,error){
         res.render(path.join(__dirname, 'WebContent/all.ejs'),{query:req.query,sessionID:req.sessionID,links:result});
@@ -147,8 +153,6 @@ app.get("/all", function(req,res){
 app.get("/leaderboard", function(req,res){
     res.render(path.join(__dirname, 'WebContent/leaderboard.ejs'),{query : req.query,sessionID:req.sessionID});
 });
-
->>>>>>> master
 
 function onUserValidated(req,res,callback){
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){
