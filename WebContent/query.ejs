@@ -2,12 +2,13 @@
     <head> 
         <script type="text/javascript" src="/socketio.js"></script>
         <link rel="stylesheet" type="text/css" href="/PostStyle.css">
+        <script type="text/javascript" src="/socketio.js"></script>
         <title><%=q.title%></title>
     </head>
     <body>
         <center>
             
-            <div class="post" style="width:20%;">
+            <div class="post" style="width:30%;">
                 <div class="postHeading" style="background-color:#5082e5;">
                     <h2 align="center"><%=q.title%></h2>
                 </div>
@@ -17,29 +18,104 @@
                     </div>
                 </div>
                 <hr>
-                <input type="text" placeholder="Answer this question!"  class="postTextBox">
+                <input type="text" placeholder="Answer this question!" id="answerbox" class="postTextBox" onkeypress="answer(event)" >
+            </div>
+
+            <br><br>
+            
+            <div class="post" style="width:30%;overflow:hidden">
+
+                <div id="answers" style="width:100%;margin:0px;background-color:white;">
+                    
+                    <% 
+                    if(answers.length>0){
+                    
+                        for(var i=0;i<answers.length;i++){ 
+                            p=-1;
+                            for(var j=0;j<users.length;j++){
+                                if(users[j].username==answers[i].username){
+                                    p=j;
+                                    break;
+                                }
+                            }
+
+
+                            
+                            %>
+
+                            <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
+                                <b style="color:black"><%=answers[i].username%></b> (<b style="color:#ae59f3"><%=users[p].score%></b>)<br>
+                                <div style="margin:5px"></div>
+                                    <%=answers[i].content%>
+                                <br>
+                            </div>
+                            <hr>
+                        <% 
+                        }
                 
-                <hr>
-                <div style="width:100%;margin:0px;background-color:white;">
-                    <div class="postText" style="text-align: left;margin-left:5px;color:grey;padding:10px;">
-                        <span style="font-size:20;padding-bottom:10px"><b>Marc Fervil</b></span><br>
-                        Look at this detalied answer, that I am putting a lot of thought and interest into posting because this is a great service
-                        <br>
-                    </div>
-                    <hr>
-                    <div style="margin-left:5px;color:grey;padding:10px">
-                        <h3 style="margin:0px">Adam Arato</h3>
+            
+                    }else{
+                    %>
+                    <div class="postText" id="noanswers" style="text-align:center;margin-left:5px;color:grey;padding:10px;">
+                            <div style="margin:5px"></div>
+                               this post has no answers 😥
+                            <br>
+                        </div>
+                        <hr>
+                    <% }%>
+
+                     
+
+
+        
+                    <!--
+                    <div style="margin-left:5px;text-align:left;color:grey;padding:10px">
+                        <b style="color:black">Adam Arato</b> (<b style="color:#ae59f3">523 points</b>)<br>
+                        <div style="margin:5px"></div>
                         Wow look at this I am replying to this post as a test because that is what people do on this website right?
                         <br>
                     </div>
+                  -->  
+                  
+
                 </div>
-            </div>
-
-
-
             </div>
 
 
         </center>
     </body>
 </html>
+
+<script type="text/javascript">
+
+    socket = io();
+
+    socket.emit('join', location.pathname.substring(3));
+
+    socket.on('newAnswer', function(msg){
+        console.log(msg);
+
+        
+		document.getElementById("answers").innerHTML=`
+        <div style="margin-left:5px;text-align:left;color:grey;padding:10px">
+                        <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
+                        <div style="margin:5px"></div>
+                            `+msg.content+`
+                        <br>
+                    </div><hr>`+document.getElementById("answers").innerHTML;
+	});
+
+    function answer(e){
+        if(e.keyCode==13){
+            socket.emit('answer',{
+                content:document.getElementById("answerbox").value,
+                url:"<%=q.url%>",
+                sid:"<%=sessionID%>"
+	        }); 
+            document.getElementById("answerbox").value="";
+        }
+    }
+
+    
+
+</script>

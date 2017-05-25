@@ -43,11 +43,12 @@
     .postContent{
         background-color:white;
         width:100%;
-        margin:0px
+        margin:0px;
+        text-align:left;
     }
 
     .postText{
-        padding:20px;color:grey
+        padding:15px;color:grey
     }
 
     .postTextBox{
