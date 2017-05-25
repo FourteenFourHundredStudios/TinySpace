@@ -1,6 +1,7 @@
 <html>
     <head> 
         <script type="text/javascript" src="/socketio.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/PostStyle.css">
         <script type="text/javascript" src="/socketio.js"></script>
         <title><%=q.title%></title>
@@ -18,7 +19,7 @@
                     </div>
                 </div>
                 <hr>
-                <input type="text" placeholder="Answer this question!" id="answerbox" class="postTextBox" onkeypress="answer(event)" >
+                <input type="text" autocomplete="off" placeholder="Answer this question!" id="answerbox" class="postTextBox" onkeypress="answer(event)" >
             </div>
 
             <br><br>
@@ -96,13 +97,14 @@
         console.log(msg);
 
         
-		document.getElementById("answers").innerHTML=`
-        <div style="margin-left:5px;text-align:left;color:grey;padding:10px">
-                        <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
-                        <div style="margin:5px"></div>
-                            `+msg.content+`
-                        <br>
-                    </div><hr>`+document.getElementById("answers").innerHTML;
+		post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
+                <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
+                <div style="margin:5px"></div>
+                    `+msg.content+`
+                     <br>
+                </div><hr>`;
+
+        $(post).hide().prependTo("#answers").fadeIn(1000);
 	});
 
     function answer(e){
