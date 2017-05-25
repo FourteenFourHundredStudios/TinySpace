@@ -1,5 +1,55 @@
+<!DOCTYPE html>
 <html>
-    <body style="background-color:rgb(249, 249, 249);font-family:sans-serif;padding:20px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid #ddd; /*box outline*/
+            background-color: #ae59f3; /*controls banner color*/
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: #ffffff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-family:sans-serif;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+    </style>
+</head>
+<body>
+
+<ul>
+    <li><a href="/home">Home</a></li>
+    <li><a href="/post">Your Post</a></li>
+    <li><a href="/profile">All  Post</a></li>
+    <li style="float:right"><a href="#Profile">Profile</a></li>
+</ul>
+
+</body>
+</html>
+
+
+<html>
+    <body style="background-color:rgb(249, 249, 249);font-family:sans-serif;    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
         <center>
             <head> 
                 <script type="text/javascript" src="socketio.js"></script>

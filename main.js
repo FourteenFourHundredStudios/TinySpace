@@ -130,9 +130,11 @@ app.get('/signup', function (req, res) {
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
+        res.sendFile(path.join(__dirname, "WebContent/search.html"))
         res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID});
     });
 });
+
 
 function onUserValidated(req,res,callback){
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){

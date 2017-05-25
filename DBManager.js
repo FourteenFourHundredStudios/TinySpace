@@ -1,10 +1,6 @@
  db = mongoUtil.getDb();
 
  exports.insert=function(doc,value,cb){
-
-//doc is the table, valuve is the value, cb is callback
- exports.append=function(doc,value,cb) {
-
      // MongoClient.connect(url, function(err, db) {
 
      db.collection(doc).insertOne(value, function (er, result) {
@@ -40,15 +36,13 @@
 //db.getCollection('spaces').aggregate([{$match : {catagory:"general"}},{ $sample: { size: 1 } }])
 
 
- exports.getRand=function(search,dbDocument,callback){
+ exports.getRand=function(search,dbDocument,callback) {
 
-   // MongoClient.connect(url, function(err, db) {
-        
-        db.collection(dbDocument).aggregate([{$match : search},{ $sample: { size: 1 } }],function(err, doc){
-            
-             callback(doc,err);
-            // db.close();
-        });
-   // });
+     // MongoClient.connect(url, function(err, db) {
 
-}
+     db.collection(dbDocument).aggregate([{$match: search}, {$sample: {size: 1}}], function (err, doc) {
+
+         callback(doc, err);
+         // db.close();
+     });
+    }
