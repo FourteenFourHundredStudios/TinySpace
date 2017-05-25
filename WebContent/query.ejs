@@ -4,21 +4,41 @@
         <link rel="stylesheet" type="text/css" href="/PostStyle.css">
         <title><%=q.title%></title>
     </head>
-    <body style="background-color:rgb(249, 249, 249);font-family:sans-serif;padding:20px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    <body>
         <center>
             
-             <div class="post" style="width:20%;">
-            <div class="postHeading" style="background-color:#5082e5;">
-                <h2 align="center"><%=q.title%></h2>
-            </div>
-            <div class="postContent">
-                <div class="postText">
-                    <%=q.content%>
+            <div class="post" style="width:20%;">
+                <div class="postHeading" style="background-color:#5082e5;">
+                    <h2 align="center"><%=q.title%></h2>
+                </div>
+                <div class="postContent">
+                    <div class="postText">
+                        <%=q.content%>
+                    </div>
+                </div>
+                <hr>
+                <input type="text" placeholder="Answer this question!"  class="postTextBox">
+                
+                <hr>
+                <div style="width:100%;margin:0px;background-color:white;">
+                    <div class="postText" style="text-align: left;margin-left:5px;color:grey;padding:10px;">
+                        <span style="font-size:20;padding-bottom:10px"><b>Marc Fervil</b></span><br>
+                        Look at this detalied answer, that I am putting a lot of thought and interest into posting because this is a great service
+                        <br>
+                    </div>
+                    <hr>
+                    <div style="margin-left:5px;color:grey;padding:10px">
+                        <h3 style="margin:0px">Adam Arato</h3>
+                        Wow look at this I am replying to this post as a test because that is what people do on this website right?
+                        <br>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <input type="text" placeholder="Answer this question!"  class="postTextBox">
-        </div>
+
+
+
+            </div>
+
 
         </center>
     </body>

@@ -75,12 +75,13 @@ mongoUtil.connectToServer( function( err ) {
      
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
-        console.log("url: "+url);
         dbManager.getOne({url:url},"queries",function(data,error){ 
             onUserValidated(req,res,function(){
                 if(data){
-                    res.render(path.join(__dirname, 'WebContent/query.ejs'),{query : req.query,uid:req.sessionID,qid:url,q:data});
-                    res.end();
+                    navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
+                    ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,uid:req.sessionID,qid:url,q:data},function(err,result){
+                        res.send(navbar+result);
+                    });                
                 }else{
                     //redirect("error.html",res);
                     res.send("error");
@@ -95,8 +96,11 @@ app.use('/', express.static(path.join(__dirname, 'WebContent/public/')));
 app.use('/images', express.static(path.join(__dirname, 'WebContent/images/')));
 
 app.get('/', function (req, res) {
-     //console.log(req.cookies); 
      res.render(path.join(__dirname, 'WebContent/index.ejs'));
+});
+
+app.get('/search', function (req, res) {
+     res.render(path.join(__dirname, 'WebContent/search.ejs'));
 });
 
 app.get('*.ico', function (req, res) {
@@ -109,12 +113,9 @@ app.get('/login', function (req, res) {
 });
 
 app.get('/signup', function (req, res) {
-    
     if(alpha){
-        //console.log("test");
 		dbManager.getOne({code:req.query.c},"codes",function(data,error){ 
 			if(data){
-                //console.log("DATA: "+data)
 				db.collection("codes").deleteMany({code:req.query.c});
 				res.render(path.join(__dirname, 'WebContent/SignUp.ejs'),{query : req.query});
 			}else{
@@ -131,22 +132,20 @@ app.get('/signup', function (req, res) {
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
-        //res.sendFile(path.join(__dirname, "WebContent/public/navbar.html"))
-        //res.render(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID});
         navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
         ejs.renderFile(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID},function(err,result){
-            //console.log(result);
             res.send(navbar+result);
         });
-
-
     });
 });
 
 
 app.get("/all", function(req,res){
-    dbManager.get({},"queries",function(result,error){
-        res.render(path.join(__dirname, 'WebContent/all.ejs'),{query:req.query,sessionID:req.sessionID,links:result});
+    navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
+        dbManager.get({},"queries",function(result,error){
+        ejs.renderFile(path.join(__dirname, 'WebContent/all.ejs'),{query : req.query,sessionID:req.sessionID,links:result},function(err,result){
+            res.send(navbar+result);
+        });
     });
 });
 
