@@ -72,35 +72,22 @@ mongoUtil.connectToServer( function( err ) {
 
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
-        dbManager.get({url:url},"answers",function(answers,error){ 
-
-                userArr=[];
-                for(var i=0;i<answers.length;i++){
-                    userArr.push(answers[i].username);
-                }
-
-                dbManager.get({ username: { $in: userArr } },"users",function(users,error){ 
-
-                    dbManager.getOne({url:url},"queries",function(data,error){ 
-                        onUserValidated(req,res,function(){
-                            if(data){
-
-                                navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
-                                ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,"users":users,"answers":answers,sessionID:req.sessionID,qid:url,q:data},function(err,result){
-                                    res.send(navbar+result);
-                                });                
-                            }else{
-                                res.send("error");
-                            }
-                        });
-                    });
-
-                });
-          
+        onUserValidated(req,res,function(){
+            db.eval("getQuestion('"+url+"')",function(errs,question){
+                navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
+                ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,sessionID:req.sessionID,q:question},function(err,result){
+                    if(err){
+                        console.log(err);
+                    }
+                    res.send(navbar+result);
+                });                   
+            });
         });
     });
 
+
 });
+
 
 app.use('/', express.static(path.join(__dirname, 'WebContent/public/')));
 app.use('/images', express.static(path.join(__dirname, 'WebContent/images/')));
