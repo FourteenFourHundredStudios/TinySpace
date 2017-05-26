@@ -29,6 +29,12 @@
                 <div id="answers" style="width:100%;margin:0px;background-color:white;">            
                     <% 
                     if(q.answers.length>0){
+
+
+                        q.answers.sort(function(a,b){
+                            return  b.answer.date > a.answer.date; 
+                        });
+
                         for(var i=0;i<q.answers.length;i++){ 
                              
                             %>
@@ -51,20 +57,6 @@
                         <hr>
                     <% }%>
 
-                     
-
-
-        
-                    <!--
-                    <div style="margin-left:5px;text-align:left;color:grey;padding:10px">
-                        <b style="color:black">Adam Arato</b> (<b style="color:#ae59f3">523 points</b>)<br>
-                        <div style="margin:5px"></div>
-                        Wow look at this I am replying to this post as a test because that is what people do on this website right?
-                        <br>
-                    </div>
-                  -->  
-                  
-
                 </div>
             </div>
 
@@ -75,9 +67,14 @@
 
 <script type="text/javascript">
 
+
     socket = io();
 
     socket.emit('join', location.pathname.substring(3));
+
+     socket.on('postError', function(msg){
+         alert(msg.message);
+     });
 
     socket.on('newAnswer', function(msg){
 

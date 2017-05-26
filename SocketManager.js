@@ -25,15 +25,22 @@ io.on('connection', function(socket){
 		var postData=null;
 		try{
 			dbManager.getOne({uid:msg.sid},"users",function(result,error){
-				postData={username:result.username,userscore:result.score,content:msg.content};
-				dbManager.insert("answers",{
-					username:result.username,
-					url:msg.url,
-					content:msg.content,
-					date:new Date()
-				},function(){
-					socket.emit("postSent",{message:"Question was answered 😎👌"});
-					io.to(url).emit('newAnswer', postData);
+				dbManager.getOne({url:msg.url,username:result.username},"answers",function(userExists,error){
+					//console.log(userExists);
+					if(!userExists){
+						postData={username:result.username,userscore:result.score,content:msg.content};
+						dbManager.insert("answers",{
+							username:result.username,
+							url:msg.url,
+							content:msg.content,
+							date:new Date()
+						},function(){
+							socket.emit("postSent",{message:"Question was answered 😎👌"});
+							io.to(url).emit('newAnswer', postData);
+						});
+					}else{
+						socket.emit("postError",{message:"You've already answerd this question!"});
+					}
 				});
 			});
 		}catch(err){

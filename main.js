@@ -78,12 +78,21 @@ mongoUtil.connectToServer( function( err ) {
                 ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,sessionID:req.sessionID,q:question},function(err,result){
                     if(err){
                         console.log(err);
+                        return;
                     }
                     res.send(navbar+result);
                 });                   
             });
         });
     });
+
+     app.get("/u/:space", function(req,res){
+        navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
+        url=req.originalUrl.substring(3);
+        ejs.renderFile(path.join(__dirname, 'WebContent/user.ejs'),{user:url},function(err,result){
+            res.send(navbar+result);
+        });      
+     });
 
 
 });
@@ -105,6 +114,13 @@ app.get('*.ico', function (req, res) {
 app.get('/login', function (req, res) {
      res.render(path.join(__dirname, 'WebContent/login.ejs'),{query : req.query});
 });
+
+app.get('/profile', function (req, res) {
+    onUserValidated(req,res,function(){
+        redirect("/u/"+req.session.username,res);
+    });
+});
+
 
 app.get('/signup', function (req, res) {
     if(alpha){
