@@ -7,14 +7,11 @@ exports.getResult = function (str,callback) {
     //var str = "giber doggo"
     var tags = str.split(" ");
     var result = [];
-  //  console.log(res)
-   // for (var i =0; i<tags.length; i++){
-        dbManager.get({tags:{"$in":tags}}, "queries", function (doc, err) {
+        //dbManager.get({tags:{"$in":tags}}, "queries", function (doc, err) {
+    dbManager.get({$or: [{tags:{"$in":tags}},{title:{"$in":tags}}]}, "queries", function (doc,err) {
+        callback(doc);
+    });
             //console.log(doc)
             //result.push(doc)
-            callback(doc);
-        });
-  //  }
-
 
 }
