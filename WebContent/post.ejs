@@ -11,20 +11,28 @@
                     <div class="postHeading" style="background-color:#8e46c9;">
                         <h2 align="center">Create a post!</h2>
                     </div>
-                    <hr>
-                    <input id="title" type="text" placeholder="Post title!"  class="postTextBox">
-                    <hr>
-                    <input id="tags" type="text" placeholder="Post tags go here (optional)"  class="postTextBox">
-                    <hr>
-                    <textarea id="content" class="postTextBox" style="height:15%" placeholder="All of your beautiful tiny questions go here!"></textarea>
+
+                    <div id="postHeading" style="padding:10px;background-color:#ae59f3;display:none">
+                        
+                    </div>
+
+                    <div id="content">
+                        <hr>
+                        <input id="title" type="text" placeholder="Post title!"  class="postTextBox">
+                        <hr>
+                        <input id="tags" type="text" placeholder="Post tags go here (optional)"  class="postTextBox">
+                        <hr>
+                        <textarea id="postContent" class="postTextBox" style="height:15%" placeholder="All of your beautiful tiny questions go here!"></textarea>
+                    </div>
                 </div>
                 <br>
-                <input class="postButton" style="height:5%;width:50%;" type="button" value="Submit" onClick="submit()">
+                <input class="postButton" id="postButton" style="height:5%;width:50%;" type="button" value="Submit" onClick="submit()">
             </div>
         </center>
     </body>
 </html>
 
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type="text/javascript">
     socket = io();
     
@@ -35,14 +43,31 @@
         socket.emit('submit',{
             title:title.value,
             tags:tags.value,
-            content:content.value,
+            content:postContent.value,
             url:Math.random(), 
             sid:"<%=sessionID%>"
 	    }); 
     }
 
     socket.on('postSent', function(msg){
-		alert(msg.message);
+		//alert(msg.message);
+
+        $("#content").slideToggle(200, function () {
+
+            /*
+            $("content").text(function () {
+                //change text based on condition
+                return $content.is(":visible") ? "Collapse" : "Expand";
+            });*/
+            
+            $("#postButton").hide("fast");
+            $("#postHeading").html("View your post at <a href='/q/"+msg.url+"'>tinyspace.co/q/"+msg.url+"</a> !");
+            
+            $("#postHeading").slideToggle(200, function () {
+                
+            });
+        });
+
 	});
 
 	socket.on('postError', function(msg){
