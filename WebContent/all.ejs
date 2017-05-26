@@ -2,7 +2,7 @@
     <body>
         <center>
             <h1>This is literally everything we have.</h1>
-            <% console.log(links);for(var i=0;i<links.length;i++){ %>
+            <%for(var i=0;i<links.length;i++){ %>
                 <%=links[i].title%>: <a style="color:#ae59f3" href="/q/<%=links[i].url%>">tinyspace.co/q/<%=links[i].url%> </a><br><br>
             <% } %>
         </center>

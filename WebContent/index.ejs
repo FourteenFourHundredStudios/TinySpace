@@ -24,8 +24,8 @@
                     </div>
                     <form id="userform" action="/loginvalidate">
                         <div id="col" class="collapse">
-                            <hr><input name="username" id="username" type="text" placeholder="Username"  class="postTextBox">
-                            <hr><input name="password" type="password" class="postTextBox" placeholder="Password" id="password">
+                            <hr><input name="username" id="username" type="text" placeholder="Username"  class="postTextBox" onkeypress="answer(event)">
+                            <hr><input name="password" type="password" class="postTextBox" placeholder="Password" id="password" onkeypress="answer(event)">
                         </div>
                     </form>
                 </div>
@@ -101,9 +101,18 @@
         }
 	});
 
+    function answer(e){
+        console.log("tryin to log in")
+        if(e.keyCode==13){
+            login()
+        }
+    }
+
     function get(u){
         return document.getElementById(u);
     }
+
+
 
     function invalid(){
         get("col").style.height=0;

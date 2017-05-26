@@ -134,8 +134,10 @@ app.get("/post", function(req,res){
 });
 
 app.get('/search', function (req, res) {
+    console.log(req.query.q)
     navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html")
-    search.getResult("doggo bad", function(posts){
+    search.getResult(req.query.q, function(posts){
+    //search.getResult(req.param(), function(posts){
        // console.log("POST: "+posts[0].title);
         ejs.renderFile(path.join(__dirname, 'WebContent/search.ejs'), {links:posts},function (err,result) {
             res.send(navbar+result);

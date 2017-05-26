@@ -41,7 +41,15 @@
             <li><a href="/post">Post</a></li>
             <li><a href="/all">All</a></li>
             <li style="float:right"><a href="/profile">Profile</a></li>
+            <input name="search" type="text" class="postTextBox" placeholder="search for post" id="searchBar" onkeypress="answer(event)">
         <b>
     </ul>
 </div>
 <br><br><br><br>
+    <script>
+        function answer(e){
+            if(e.keyCode == 13) {
+                window.location.href = "/search?q=" + document.getElementById("searchBar").value;
+            }
+        }
+    </script>
