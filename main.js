@@ -81,24 +81,41 @@ mongoUtil.connectToServer( function( err ) {
         url=req.originalUrl.substring(3);
         onUserValidated(req,res,function(){
             db.eval("getQuestion('"+url+"')",function(errs,question){
-                navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
                 ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,sessionID:req.sessionID,q:question},function(err,result){
                     if(err){
                         console.log(err);
                         return;
                     }
-                    res.send(navbar+result);
+                    res.send(result);
                 });                   
             });
         });
     });
 
      app.get("/u/:space", function(req,res){
-        navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
         url=req.originalUrl.substring(3);
-        ejs.renderFile(path.join(__dirname, 'WebContent/user.ejs'),{user:url},function(err,result){
-            res.send(navbar+result);
-        });      
+        dbManager.get({username:url},"queries",function(queries,error){ 
+            dbManager.getAnswers({username:url},function(answers,error){
+                content=[]; 
+                queries.forEach(function(i){
+                    content.push(i);
+                });
+                answers.forEach(function(i){
+                    console.log("ARRAY");
+                    console.log(i);
+                    content.push(i);
+                });
+                content.sort(function(a,b){
+                    return  content.date > content.date; 
+                });
+
+                ejs.renderFile(path.join(__dirname, 'WebContent/user.ejs'),{user:url,content:content},function(err,result){
+                    if(err)console.log(err);
+                    res.send(result);
+                });
+            });
+        });
+
      });
 
 
@@ -149,30 +166,27 @@ app.get('/signup', function (req, res) {
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
-        navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
         ejs.renderFile(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID},function(err,result){
-            res.send(navbar+result);
+            res.send(result);
         });
     });
 });
 
 app.get('/search', function (req, res) {
     console.log(req.query.q)
-    navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html")
     search.getResult(req.query.q, function(posts){
     //search.getResult(req.param(), function(posts){
        // console.log("POST: "+posts[0].title);
         ejs.renderFile(path.join(__dirname, 'WebContent/search.ejs'), {links:posts},function (err,result) {
-            res.send(navbar+result);
+            res.send(result);
         });
     });
 });
 
 app.get("/all", function(req,res){
-    navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
         dbManager.get({},"queries",function(result,error){
         ejs.renderFile(path.join(__dirname, 'WebContent/all.ejs'),{query : req.query,sessionID:req.sessionID,links:result},function(err,result){
-            res.send(navbar+result);
+            res.send(result);
         });
     });
 });
