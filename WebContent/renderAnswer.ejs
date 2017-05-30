@@ -1,0 +1,28 @@
+
+<br>
+<% if(!body){ %>
+    <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
+        <b style="color:black"><%=data.username%></b> (<b style="color:#ae59f3"><%=data.userdata.score%></b>)<br>
+        <div style="margin:5px"></div>
+            <%=data.content%>
+        <br>
+    </div>
+    <hr>
+<% }else{ %>
+    
+    
+    <div style="background-color:white;width:30%; outline:1px solid rgb(232,232,232);"> 
+        <div style="background-color:rgb(245,245,245);width:100%" >
+            <div style="text-align:center;padding:10px">
+                Full question at <a style="color:#ae59f3" href="/q/<%=data.url%>">http://tinyspace.co/q/<%= data.url %></a>
+            </div>
+        </div>
+        <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
+            <b style="color:black"><%=data.username%></b> (<b style="color:#ae59f3"><%=data.userdata.score%></b>)<br>
+            <div style="margin:5px"></div>
+                <%=data.content%>
+            <br>
+        </div>
+    </div>
+<% } %>
+<br>

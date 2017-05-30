@@ -1,3 +1,6 @@
+<%- include('navbar.ejs') %>
+
+<%  if(q.question!=null){ %>
 <html>
     <head> 
         <script type="text/javascript" src="/socketio.js"></script>
@@ -10,7 +13,9 @@
         <center>
             
             <div class="post" style="width:30%;">
-                <div class="postHeading" style="background-color:#03A9F4;">
+           
+            <!-- OG COLOR: background-color:#03A9F4;-->
+                <div class="postHeading" style=" background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);">
                     <h2 align="center"><%=q.question.title%></h2>
                 </div>
                 <div class="postContent">
@@ -120,3 +125,20 @@
     
 
 </script>
+
+    <% } else {%>
+
+        <center>
+            <h1> UH-OH! </h1>
+            <h2>
+            we don't really know what happened tbh.<br>
+            This question no longer exists maybe????<br>
+            I don't know man.<br>
+            </h2>
+            😭😭😭😭😭 
+            <br><br><br><br><br><br><br><br>
+            <a href="/all">Take me back to the comfort of the all page</a>           
+        </center>
+
+
+    <% } %>

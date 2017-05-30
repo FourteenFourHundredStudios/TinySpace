@@ -1,3 +1,4 @@
+<%- include('navbar.ejs') %>
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="/PostStyle.css">
@@ -5,7 +6,15 @@
     </head>
     <body>
         <center>
-            <%=user%>
+            <% content.forEach(function(i){ 
+                if (typeof i.tags !== 'undefined') {%>
+                    <%- include('renderPost.ejs', {data: i}); %><br><br>
+            <%  }else{ console.log(i);%>
+                    
+                    <%- include('renderAnswer.ejs', {data: i,body:true}); %>
+              <%  } 
+            });
+            %>
         </center>
     </body>
 </html>
