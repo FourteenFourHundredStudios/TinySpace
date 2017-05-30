@@ -20,6 +20,12 @@ ejs = require('ejs');
 nodemailer = require('nodemailer');
 session = require('express-session');
 cookieParser = require('cookie-parser');
+bodyParser = require('body-parser')
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
 debug=true;
 alpha=true;
@@ -31,7 +37,7 @@ app.use(wildcardSubdomains({
 app.get('/s/*/', function(req, res){
 
     var domain=req.headers.host.split(":")[0];
-    subdomain=domain.substring(0,domain.indexOf("."));
+    subdomain=domain.substring(0,domain.indexOf("."));pos
     res.send("subdomain: "+subdomain);
 });
 
@@ -69,6 +75,7 @@ mongoUtil.connectToServer( function( err ) {
      dbManager=require('./DBManager.js');
      socketManager=require('./SocketManager.js');
      search = require("./search");
+     phone = require("./phoneRoutes")
 
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
@@ -160,7 +167,6 @@ app.get('/search', function (req, res) {
         });
     });
 });
-
 
 app.get("/all", function(req,res){
     navbar=fs.readFileSync(__dirname+"/WebContent/public/navbar.html");
