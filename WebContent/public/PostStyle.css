@@ -76,3 +76,18 @@
     .postTextBox:focus {
         outline: none; 
     }
+
+    .bumpText active{
+        color:#00E676
+    }
+
+    .bumpText active{
+        color:black;
+    }
+
+
+    .bumpText:hover{
+        color:#00E676;
+        cursor: pointer;
+        text-decoration: underline;
+    }
