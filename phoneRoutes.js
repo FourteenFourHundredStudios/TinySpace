@@ -1,15 +1,14 @@
 /**
- * Created by diamondrubix on 5/29/17.
+ * Created by diamondrubix on 5/30/17.
  */
 
-
-app.post("/phone", function(req,res){
-    console.log("this is a phone connection")
-    res.end("hello")
+app.post('/phone', function (req, res) {
+    console.log("aphone did connect")
+    res.send('POST request to the homepage')
 })
 
-app.post("/phoneLogin", function(req,res){
+app.post('/phoneLogin', function (req,res) {
     console.log(req.body)
-    //console.log(req.body.username)
-    res.end("logged in")
+    res.send("logged in threw phoneloge in")
+
 })

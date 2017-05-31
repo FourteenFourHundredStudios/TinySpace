@@ -20,6 +20,14 @@ ejs = require('ejs');
 nodemailer = require('nodemailer');
 session = require('express-session');
 cookieParser = require('cookie-parser');
+
+debug=true;
+alpha=true;
+
+app.use(wildcardSubdomains({
+  namespace: 's', whitelist: ['www', 'app'],
+}))
+
 bodyParser = require('body-parser')
 
 app.use(bodyParser.urlencoded({
@@ -27,17 +35,11 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-debug=true;
-alpha=true;
-
-app.use(wildcardSubdomains({
-  namespace: 's', whitelist: ['www', 'app'],
-}));
 
 app.get('/s/*/', function(req, res){
 
     var domain=req.headers.host.split(":")[0];
-    subdomain=domain.substring(0,domain.indexOf("."));pos
+    subdomain=domain.substring(0,domain.indexOf("."));
     res.send("subdomain: "+subdomain);
 });
 
@@ -115,7 +117,6 @@ mongoUtil.connectToServer( function( err ) {
                 });
             });
         });
-
      });
 
 
@@ -173,7 +174,7 @@ app.get("/post", function(req,res){
 });
 
 app.get('/search', function (req, res) {
-    console.log(req.query.q)
+    //console.log(req.query.q)
     search.getResult(req.query.q, function(posts){
     //search.getResult(req.param(), function(posts){
        // console.log("POST: "+posts[0].title);
@@ -182,6 +183,7 @@ app.get('/search', function (req, res) {
         });
     });
 });
+
 
 app.get("/all", function(req,res){
         dbManager.get({},"queries",function(result,error){
