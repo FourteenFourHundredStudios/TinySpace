@@ -149,6 +149,21 @@ app.get('/profile', function (req, res) {
     });
 });
 
+app.get('/logout', function (req, res) {
+    onUserValidated(req,res,function(){
+        un=req.session.username;
+        req.session.destroy(function(err) {
+            db.collection("users").update(
+                { username: un },
+                { $unset: { uid: "",session:""} }
+            ,function(error,result){
+                 redirect("/",res);
+            });
+        });
+    });
+});
+
+
 app.post('/getAnswer', function (req, res) {
     dbManager.getAnswers({url:req.body.url,username:req.body.username},function(answers,error){
         //console.log(answers[0]);

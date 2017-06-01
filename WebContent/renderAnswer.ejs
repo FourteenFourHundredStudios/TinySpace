@@ -23,13 +23,13 @@
     </div>
     
 <% }else{ %>
-    <div style="background-color:white;width:30%; outline:1px solid rgb(232,232,232);"> 
+    <div style="background-color:white;width:30%; outline:1px solid rgb(232,232,232);"  id="<%=postId%>"> 
         <div style="background-color:rgb(245,245,245);width:100%" >
             <div style="text-align:center;padding:10px">
                 Full question at <a style="color:#ae59f3" href="/q/<%=data.url%>">http://tinyspace.co/q/<%= data.url %></a>
             </div>
         </div>
-        <div class="postText" id="<%=postId%>" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
+        <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
             <b style="color:black"><%=data.username%></b> (<b style="color:#ae59f3"><%=data.userdata.score%></b>) &middot; 
             <% if (data.bumps.indexOf(data.username)>-1){ %>
                 <span id="<%=data.username%>-div" class="bumpText active" onClick="unbump('<%=data.username%>','<%= postId%>');">

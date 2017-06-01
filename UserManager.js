@@ -110,50 +110,50 @@ app.get('/loginvalidate', function (req, res) {
 					req.session.nextPage=null;	
 				}
 
-				app.use(session({
-					genid: function(req) {
-						return sha1(Math.random()+"verysalty");
-					},
-					secret: "thetinyest"
-				}));
+				//req.session.regenerate(function(err) {
 
-				req.session.username=req.query.username;
-                
-				
-				db.collection("users").update(
-					{username: req.query.username },
-					{$set: {uid: req.sessionID } }
-				);
 
-                mins=40;
-				if(req.query.logged=="true"){
-					console.log("checked!");
-					var CookieCode=sha1(Math.random()+"TINYTINY");
 
-						db.collection("users").update(
-							{username: req.query.username },
-							{$set: {session: CookieCode} }
-						);	
+					req.session.username=req.query.username;
+					
+					
+					db.collection("users").update(
+						{username: req.query.username },
+						{$set: {uid: req.sessionID } }
+					);
 
+					mins=40;
+					if(req.query.logged=="true"){
+						console.log("checked!");
+						var CookieCode=sha1(Math.random()+"TINYTINY");
+
+							db.collection("users").update(
+								{username: req.query.username },
+								{$set: {session: CookieCode} }
+							);	
+
+						res.writeHead(302, {
+							'Location': page,
+							//'Set-Cookie': 'tinySession='+sessionId+'; expires='+new Date(new Date().getTime()+(mins * 60 * 1000)).toUTCString(),
+							'Set-Cookie': 'stayLogged='+CookieCode+'; expires='+new Date(new Date().getTime()+(30*24*60 * 60 * 1000)).toUTCString()
+						});
+						res.end();
+						return;
+					}
 					res.writeHead(302, {
 						'Location': page,
-						//'Set-Cookie': 'tinySession='+sessionId+'; expires='+new Date(new Date().getTime()+(mins * 60 * 1000)).toUTCString(),
-						'Set-Cookie': 'stayLogged='+CookieCode+'; expires='+new Date(new Date().getTime()+(30*24*60 * 60 * 1000)).toUTCString()
 					});
 					res.end();
 					return;
-				}
-				res.writeHead(302, {
-					'Location': page,
-				});
-				res.end();
-				return;
+			//	})
 			}
+			
 		}
 		res.writeHead(302, {
 			'Location': "/login?invalid=y"
 		});
 		res.end();
+		
 	});
      
 
