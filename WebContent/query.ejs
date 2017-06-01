@@ -45,11 +45,28 @@
                             %>
                             
                             <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
-                                <b style="color:black"><%=q.answers[i].answer.username%></b> (<b style="color:#ae59f3"><%=q.answers[i].user.score%></b>) &middot; <span class="bumpText"><i class="fa fa-paper-plane" aria-hidden="true"></i> 5,000</span> 
+                                <b style="color:black"><%=q.answers[i].answer.username%></b> (<b style="color:#ae59f3"><%=q.answers[i].user.score%></b>) &middot; 
+                                    
+                                    <% if (q.answers[i].answer.bumps.indexOf(q.answers[i].answer.username)>-1){ %>
+                                        <span id="<%=q.answers[i].answer.username%>-div" class="bumpText active" onClick="unbump('<%=q.answers[i].answer.username%>');">
+                                            <span id="<%=q.answers[i].answer.username%>-count"> 
+                                                <%=q.answers[i].answer.bumps.length%>
+                                            </span> 
+                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> 
+                                        </span> 
+                                    <% }else{ %>
+                                        <span id="<%=q.answers[i].answer.username%>-div" class="bumpText" onClick="bump('<%=q.answers[i].answer.username%>');">
+                                            <span id="<%=q.answers[i].answer.username%>-count"> 
+                                                <%=q.answers[i].answer.bumps.length%>
+                                            </span> 
+                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> 
+                                        </span>
+                                    <% } %>
+                                    
                                 <br>
                                 <div style="margin:5px"></div>
-                                   
-                                    <%=q.answers[i].answer.content%>
+
+                                <%=q.answers[i].answer.content%>
                                 <br>
                             </div>
                             <hr>
@@ -81,34 +98,57 @@
 
     socket.emit('join', location.pathname.substring(3));
 
-     socket.on('postError', function(msg){
-         alert(msg.message);
-     });
+    socket.on('postError', function(msg){
+        alert(msg.message);
+    });
+
+    function bump(username){
+        //alert(username);
+     
+        
+        socket.emit('sendBump',{
+            username:username,
+            url:"<%=q.question.url%>",
+            sid:"<%=sessionID%>"
+        });
+        location.reload();
+    }
+
+    function unbump(username){
+        //alert(username);
+        socket.emit('sendUnBump',{
+            username:username,
+            url:"<%=q.question.url%>",
+            sid:"<%=sessionID%>"
+        });
+        location.reload();
+    }
 
     socket.on('newAnswer', function(msg){
 
-        if($( "#noanswers" ).length){
-            $("#noanswers").fadeOut(function(){
-                post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
-                    <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
+            post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
+                    <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)
+                    
+                    <span id="`+msg.username+`-div" class="bumpText" onClick="bump('`+msg.username+`');">
+                        <span id="`+msg.username+`-count"> 
+                           0
+                        </span> 
+                        <i class="fa fa-paper-plane" aria-hidden="true"></i> 
+                    </span> 
+                    <br>
                     <div style="margin:5px"></div>
                         `+msg.content+`
                         <br>
                     </div><hr>`;
 
-            
+
+        if($( "#noanswers" ).length){
+            $("#noanswers").fadeOut(function(){
+
                 $(post).hide().prependTo("#answers").fadeIn(1000);
             });
         }else{
-            post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
-                    <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)<br>
-                    <div style="margin:5px"></div>
-                        `+msg.content+`
-                        <br>
-                    </div><hr>`;
-
-            
-                $(post).hide().prependTo("#answers").fadeIn(1000);
+            $(post).hide().prependTo("#answers").fadeIn(1000);
         }
 
         
@@ -131,7 +171,7 @@
 </script>
 
     <% } else {%>
-
+        
         <center>
             <h1> UH-OH! </h1>
             <h2>

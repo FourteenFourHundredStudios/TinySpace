@@ -21,26 +21,47 @@ io.on('connection', function(socket){
         socket.join(pathname);
     });
 
+	socket.on('sendBump', function(msg) {	
+		dbManager.getOne({uid:msg.sid},"users",function(user,error){
+			console.log(user.username+" bumped!")
+			db.collection("answers").update(
+				{username: user.username, url:msg.url},
+				{"$addToSet" : {bumps : user.username}}  
+			);
+		});
+    });
+
+	socket.on('sendUnBump', function(msg) {	
+		dbManager.getOne({uid:msg.sid},"users",function(user,error){
+			console.log(user.username+" bumped!")
+			db.collection("answers").update(
+				{username: user.username, url:msg.url},
+				{"$pull" : {bumps : user.username}}  
+			);
+		});
+    });
+
 	socket.on('answer', function(msg){
 		var postData=null;
 		try{
 			dbManager.getOne({uid:msg.sid},"users",function(result,error){
 				dbManager.getOne({url:msg.url,username:result.username},"answers",function(userExists,error){
-					//console.log(userExists);
-					if(!userExists){
+
+//					if(!userExists){
 						postData={username:result.username,userscore:result.score,content:msg.content};
 						dbManager.insert("answers",{
 							username:result.username,
 							url:msg.url,
 							content:msg.content,
+							bumps:[],
 							date:new Date()
 						},function(){
 							socket.emit("postSent",{message:"Question was answered 😎👌"});
 							io.to(url).emit('newAnswer', postData);
 						});
-					}else{
-						socket.emit("postError",{message:"You've already answerd this question!"});
-					}
+	//				}else{
+//						socket.emit("postError",{message:"You've already answerd this question!"});
+//					}
 				});
 			});
 		}catch(err){

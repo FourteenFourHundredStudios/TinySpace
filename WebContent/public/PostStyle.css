@@ -77,12 +77,12 @@
         outline: none; 
     }
 
-    .bumpText active{
-        color:#00E676
+    .bumpText{
+        color:black;
     }
 
-    .bumpText active{
-        color:black;
+     .bumpText.active{
+        color:#00E676
     }
 
 
