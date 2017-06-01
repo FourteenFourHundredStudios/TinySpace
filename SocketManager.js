@@ -23,9 +23,9 @@ io.on('connection', function(socket){
 
 	socket.on('sendBump', function(msg) {	
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
-			console.log(user.username+" bumped!")
+			console.log(user.username+" bumped "+msg.username+" on page "+msg.url)
 			db.collection("answers").update(
-				{username: user.username, url:msg.url},
+				{username: msg.username, url:msg.url},
 				{"$addToSet" : {bumps : user.username}}  
 			);
 		});
@@ -33,9 +33,9 @@ io.on('connection', function(socket){
 
 	socket.on('sendUnBump', function(msg) {	
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
-			console.log(user.username+" bumped!")
+			console.log(user.username+" unbumped "+msg.username+" on page "+msg.url)
 			db.collection("answers").update(
-				{username: user.username, url:msg.url},
+				{username: msg.username, url:msg.url},
 				{"$pull" : {bumps : user.username}}  
 			);
 		});

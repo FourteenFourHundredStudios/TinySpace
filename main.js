@@ -86,7 +86,7 @@ mongoUtil.connectToServer( function( err ) {
             dbManager.getAnswers({url:url},function(answers,error1){
                 dbManager.getOne({url:url},"queries",function(question,error2){
                 //console.log(answe)
-                    ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,sessionID:req.sessionID,q:question,a:answers},function(err,result){
+                    ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers},function(err,result){
                         if(err){
                             console.log(err);
                             return;
@@ -107,8 +107,7 @@ mongoUtil.connectToServer( function( err ) {
                     content.push(i);
                 });
                 answers.forEach(function(i){
-                    console.log("ARRAY");
-                    console.log(i);
+
                     content.push(i);
                 });
                 content.sort(function(a,b){
@@ -152,10 +151,11 @@ app.get('/profile', function (req, res) {
 
 app.post('/getAnswer', function (req, res) {
     dbManager.getAnswers({url:req.body.url,username:req.body.username},function(answers,error){
+        //console.log(answers[0]);
         if(req.body.html=="false"){
             res.send(answers[0]);
         }else{
-            ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false},function(err,result){
+            ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:req.session.username},function(err,result){
                 res.send(result);
             });
         }

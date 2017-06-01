@@ -1,16 +1,16 @@
-<% postId=sha1(data);%>
+<% postId=sha1(Math.random());%>
 <% if(!body){ %>
     <div class="postText" id="<%=postId%>" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
         <b style="color:black"><%=data.username%></b> (<b style="color:#ae59f3"><%=data.userdata.score%></b>) &middot; 
-        <% if (data.bumps.indexOf(data.username)>-1){ %>
-            <span id="<%=data.username%>-div" class="bumpText active" onClick="unbump('<%=data.username%>','<%= postId%>');">
+        <% if (data.bumps.indexOf(username)>-1){ %>
+            <span id="<%=data.username%>-div" class="bumpText active" onClick="unbump('<%=data.username%>','<%=postId%>');">
                 <span id="<%=data.username%>-count"> 
                     <%=data.bumps.length%>
                 </span> 
                 <i class="fa fa-paper-plane" aria-hidden="true"></i> 
             </span> 
         <% }else{ %>
-            <span id="<%=data.username%>-div" class="bumpText" onClick="bump('<%=data.username%>','<%= postId%>');">
+            <span id="<%=data.username%>-div" class="bumpText" onClick="bump('<%=data.username%>','<%=postId%>');">
                 <span id="<%=data.username%>-count"> 
                     <%=data.bumps.length%>
                 </span> 

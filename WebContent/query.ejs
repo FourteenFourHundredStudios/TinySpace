@@ -100,12 +100,13 @@
     }
 
     socket.on('newAnswer', function(msg){
-        console.log(msg);
+          //alert("ddd");
           $.post("/getAnswer",{
                 username: msg.username,
                 url: "<%=q.url%>",
                 html: "true"
          },function(post, status){
+             
              if($("#noanswers").length){
                 $("#noanswers").fadeOut(function(){
                     $(post).hide().prependTo("#answers").fadeIn(1000);
@@ -117,11 +118,13 @@
 	});
 
     function updatePost(id,username){
+        
          $.post("/getAnswer",{
                 username: username,
                 url: "<%=q.url%>",
                 html: "true"
          },function(post, status){
+                //alert(post);
                 $("#"+id).replaceWith(post);
          });
     }

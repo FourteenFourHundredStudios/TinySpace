@@ -110,8 +110,16 @@ app.get('/loginvalidate', function (req, res) {
 					req.session.nextPage=null;	
 				}
 
+				app.use(session({
+					genid: function(req) {
+						return sha1(Math.random()+"verysalty");
+					},
+					secret: "thetinyest"
+				}));
+
 				req.session.username=req.query.username;
                 
+				
 				db.collection("users").update(
 					{username: req.query.username },
 					{$set: {uid: req.sessionID } }

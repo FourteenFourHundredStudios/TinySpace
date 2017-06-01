@@ -6,6 +6,8 @@
     </head>
     <body>
         <center>
+            <h1>/u/<%=user%></h1>
+
             <% content.forEach(function(i){ 
                 if (typeof i.tags !== 'undefined') {%>
                     <%- include('renderPost.ejs', {data: i}); %><br>
