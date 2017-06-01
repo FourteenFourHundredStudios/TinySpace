@@ -14,17 +14,17 @@
  exports.getAnswers=function(search,callback){
     try{
        // MongoClient.connect(url, function(err, db) {
-            db.collection("answers").aggregate([
+        db.collection("answers").aggregate([
     // Unwind the source
      
-   {"$match":search},
-    { "$lookup": {
-       "from": "users",
-       "localField": "username",
-       "foreignField": "username",
-       "as": "userdata",
-        
-    }},
+            {"$match":search},
+                { "$lookup": {
+                "from": "users",
+                "localField": "username",
+                "foreignField": "username",
+                "as": "userdata",
+                    
+                }},
 
    
 

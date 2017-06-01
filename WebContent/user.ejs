@@ -8,11 +8,10 @@
         <center>
             <% content.forEach(function(i){ 
                 if (typeof i.tags !== 'undefined') {%>
-                    <%- include('renderPost.ejs', {data: i}); %><br><br>
-            <%  }else{ console.log(i);%>
-                    
-                    <%- include('renderAnswer.ejs', {data: i,body:true}); %>
-              <%  } 
+                    <%- include('renderPost.ejs', {data: i}); %><br>
+            <%  }else{ %>
+                    <%- include('renderAnswer.ejs', {data: i,body:true}); %><br>
+              <% } 
             });
             %>
         </center>

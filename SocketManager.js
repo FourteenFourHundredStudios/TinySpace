@@ -47,7 +47,7 @@ io.on('connection', function(socket){
 			dbManager.getOne({uid:msg.sid},"users",function(result,error){
 				dbManager.getOne({url:msg.url,username:result.username},"answers",function(userExists,error){
 
-//					if(!userExists){
+					if(!userExists){
 						postData={username:result.username,userscore:result.score,content:msg.content};
 						dbManager.insert("answers",{
 							username:result.username,
@@ -59,9 +59,9 @@ io.on('connection', function(socket){
 							socket.emit("postSent",{message:"Question was answered 😎👌"});
 							io.to(url).emit('newAnswer', postData);
 						});
-	//				}else{
-//						socket.emit("postError",{message:"You've already answerd this question!"});
-//					}
+					}else{
+						socket.emit("postError",{message:"You've already answerd this question!"});
+					}
 				});
 			});
 		}catch(err){

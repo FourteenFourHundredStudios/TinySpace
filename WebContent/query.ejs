@@ -1,13 +1,13 @@
 <%- include('navbar.ejs') %>
 
-<%  if(q.question!=null){ %>
+<%  if(q!=null){ %>
 <html>
     <head> 
         <script type="text/javascript" src="/socketio.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/PostStyle.css">
         <script type="text/javascript" src="/socketio.js"></script>
-        <title><%=q.question.title%></title>
+        <title><%=q.title%></title>
     </head>
     <body>
         <center>
@@ -16,11 +16,11 @@
            
             <!-- OG COLOR: background-color:#03A9F4;-->
                 <div class="postHeading" style=" background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);">
-                    <h2 align="center"><%=q.question.title%></h2>
+                    <h2 align="center"><%=q.title%></h2>
                 </div>
                 <div class="postContent">
                     <div class="postText">
-                        <%=q.question.content%>
+                        <%=q.content%>
                     </div>
                 </div>
                 <hr>
@@ -33,54 +33,29 @@
             <div class="post" style="width:30%;overflow:hidden">
                 <div id="answers" style="width:100%;margin:0px;background-color:white;">            
                     <% 
-                    if(q.answers.length>0){
+                    //console.log(a.length);
+                    if(a.length>0){
 
 
-                        q.answers.sort(function(a,b){
-                            return  b.answer.date > a.answer.date; 
+                        a.sort(function(a,b){
+                            return  b.date > a.date; 
                         });
 
-                        for(var i=0;i<q.answers.length;i++){ 
-                             
-                            %>
+                        for(var i=0;i<a.length;i++){ %> 
                             
-                            <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
-                                <b style="color:black"><%=q.answers[i].answer.username%></b> (<b style="color:#ae59f3"><%=q.answers[i].user.score%></b>) &middot; 
-                                    
-                                    <% if (q.answers[i].answer.bumps.indexOf(q.answers[i].answer.username)>-1){ %>
-                                        <span id="<%=q.answers[i].answer.username%>-div" class="bumpText active" onClick="unbump('<%=q.answers[i].answer.username%>');">
-                                            <span id="<%=q.answers[i].answer.username%>-count"> 
-                                                <%=q.answers[i].answer.bumps.length%>
-                                            </span> 
-                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> 
-                                        </span> 
-                                    <% }else{ %>
-                                        <span id="<%=q.answers[i].answer.username%>-div" class="bumpText" onClick="bump('<%=q.answers[i].answer.username%>');">
-                                            <span id="<%=q.answers[i].answer.username%>-count"> 
-                                                <%=q.answers[i].answer.bumps.length%>
-                                            </span> 
-                                            <i class="fa fa-paper-plane" aria-hidden="true"></i> 
-                                        </span>
-                                    <% } %>
-                                    
-                                <br>
-                                <div style="margin:5px"></div>
+                          <%- include('renderAnswer.ejs', {data: a[i],body:false}); %>
 
-                                <%=q.answers[i].answer.content%>
-                                <br>
-                            </div>
-                            <hr>
-                        <% 
-                        }
-                    }else{
-                    %>
+                        <% } %>
+
+                    <% }else{ %>
                     
-                    <div class="postText" id="noanswers" style="text-align:center;margin-left:5px;color:grey;padding:10px;">
+                        <div class="postText" id="noanswers" style="text-align:center;margin-left:5px;color:grey;padding:10px;">
                             <div style="margin:5px"></div>
                                this post has no answers 😥
                             <br>
+         
                         </div>
-                        <hr>
+                        
                     <% }%>
 
                 </div>
@@ -96,70 +71,66 @@
 
     socket = io();
 
+  
+
     socket.emit('join', location.pathname.substring(3));
 
     socket.on('postError', function(msg){
         alert(msg.message);
     });
 
-    function bump(username){
-        //alert(username);
-     
-        
+    function bump(username,id){
         socket.emit('sendBump',{
             username:username,
-            url:"<%=q.question.url%>",
+            url:"<%=q.url%>",
             sid:"<%=sessionID%>"
         });
-        location.reload();
+        updatePost(id,username);
+        //location.reload();
     }
 
-    function unbump(username){
-        //alert(username);
+    function unbump(username,id){
         socket.emit('sendUnBump',{
             username:username,
-            url:"<%=q.question.url%>",
+            url:"<%=q.url%>",
             sid:"<%=sessionID%>"
         });
-        location.reload();
+        updatePost(id,username);
+        //location.reload();
     }
 
     socket.on('newAnswer', function(msg){
-
-            post=`<div style="margin-left:5px;text-align:left;color:grey;padding:10px">
-                    <b style="color:black">`+msg.username+`</b> (<b style="color:#ae59f3">`+msg.userscore+`</b>)
-                    
-                    <span id="`+msg.username+`-div" class="bumpText" onClick="bump('`+msg.username+`');">
-                        <span id="`+msg.username+`-count"> 
-                           0
-                        </span> 
-                        <i class="fa fa-paper-plane" aria-hidden="true"></i> 
-                    </span> 
-                    <br>
-                    <div style="margin:5px"></div>
-                        `+msg.content+`
-                        <br>
-                    </div><hr>`;
-
-
-        if($( "#noanswers" ).length){
-            $("#noanswers").fadeOut(function(){
-
+        console.log(msg);
+          $.post("/getAnswer",{
+                username: msg.username,
+                url: "<%=q.url%>",
+                html: "true"
+         },function(post, status){
+             if($("#noanswers").length){
+                $("#noanswers").fadeOut(function(){
+                    $(post).hide().prependTo("#answers").fadeIn(1000);
+                });
+            }else{
                 $(post).hide().prependTo("#answers").fadeIn(1000);
-            });
-        }else{
-            $(post).hide().prependTo("#answers").fadeIn(1000);
-        }
-
-        
-		
+            }
+        });	
 	});
+
+    function updatePost(id,username){
+         $.post("/getAnswer",{
+                username: username,
+                url: "<%=q.url%>",
+                html: "true"
+         },function(post, status){
+                $("#"+id).replaceWith(post);
+         });
+    }
 
     function answer(e){
         if(e.keyCode==13){
             socket.emit('answer',{
                 content:document.getElementById("answerbox").value,
-                url:"<%=q.question.url%>",
+                url:"<%=q.url%>",
                 sid:"<%=sessionID%>"
 	        }); 
             document.getElementById("answerbox").value="";

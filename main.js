@@ -82,14 +82,18 @@ mongoUtil.connectToServer( function( err ) {
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
         onUserValidated(req,res,function(){
-            db.eval("getQuestion('"+url+"')",function(errs,question){
-                ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,sessionID:req.sessionID,q:question},function(err,result){
-                    if(err){
-                        console.log(err);
-                        return;
-                    }
-                    res.send(result);
-                });                   
+           // db.eval("getQuestion('"+url+"')",function(errs,question){
+            dbManager.getAnswers({url:url},function(answers,error1){
+                dbManager.getOne({url:url},"queries",function(question,error2){
+                //console.log(answe)
+                    ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,sessionID:req.sessionID,q:question,a:answers},function(err,result){
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        res.send(result);
+                    }); 
+                });                  
             });
         });
     });
@@ -146,6 +150,18 @@ app.get('/profile', function (req, res) {
     });
 });
 
+app.post('/getAnswer', function (req, res) {
+    dbManager.getAnswers({url:req.body.url,username:req.body.username},function(answers,error){
+        if(req.body.html=="false"){
+            res.send(answers[0]);
+        }else{
+            ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false},function(err,result){
+                res.send(result);
+            });
+        }
+    });
+});
+
 
 app.get('/signup', function (req, res) {
     if(alpha){
@@ -174,10 +190,7 @@ app.get("/post", function(req,res){
 });
 
 app.get('/search', function (req, res) {
-    //console.log(req.query.q)
     search.getResult(req.query.q, function(posts){
-    //search.getResult(req.param(), function(posts){
-       // console.log("POST: "+posts[0].title);
         ejs.renderFile(path.join(__dirname, 'WebContent/search.ejs'), {links:posts},function (err,result) {
             res.send(result);
         });
