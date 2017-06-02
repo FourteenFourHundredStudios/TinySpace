@@ -111,6 +111,24 @@
         });
     });
 
+
+    socket.on('reloadAnswer', function(msg){
+        
+        $.post("/getAnswer",{
+                username: msg.username,
+                url: "<%=q.url%>",
+                html: "true"
+         },function(post, status){
+             //alert(post);
+              $("#"+msg.id).fadeOut("fast", function(){
+                    $("#"+msg.id).replaceWith(post);
+                    $("#"+msg.id).fadeIn("fast");
+            });
+        });	
+
+       
+    });
+
     socket.on('newAnswer', function(msg){
           //alert("ddd");
           $.post("/getAnswer",{

@@ -30,6 +30,7 @@ io.on('connection', function(socket){
 				dbManager.getAnswers({username: msg.username, url:msg.url},function(answers,error3){
 					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
 						socket.emit("updateAnswer",{html:html,id:msg.id});
+						io.to(msg.url).emit("reloadAnswer",{username:msg.username,id:msg.id});
 					});
 				});
 			});
@@ -46,6 +47,7 @@ io.on('connection', function(socket){
 					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
 						//io.to(msg.url) for reaaltime ???
 						socket.emit("updateAnswer",{html:html,id:msg.id});
+						io.to(msg.url).emit("reloadAnswer",{username:msg.username,id:msg.id});
 					});
 				});
 			});
