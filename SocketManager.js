@@ -23,21 +23,32 @@ io.on('connection', function(socket){
 
 	socket.on('sendBump', function(msg) {	
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
-			console.log(user.username+" bumped "+msg.username+" on page "+msg.url)
 			db.collection("answers").update(
 				{username: msg.username, url:msg.url},
 				{"$addToSet" : {bumps : user.username}}  
-			);
+			,function(error,result){
+				dbManager.getAnswers({username: msg.username, url:msg.url},function(answers,error3){
+					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
+						socket.emit("updateAnswer",{html:html,id:msg.id});
+					});
+				});
+			});
 		});
     });
 
 	socket.on('sendUnBump', function(msg) {	
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
-			console.log(user.username+" unbumped "+msg.username+" on page "+msg.url)
 			db.collection("answers").update(
 				{username: msg.username, url:msg.url},
-				{"$pull" : {bumps : user.username}}  
-			);
+				{"$pull" : {bumps : user.username}}
+			,function(error,result){
+				dbManager.getAnswers({username: msg.username, url:msg.url},function(answers,error3){
+					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
+						//io.to(msg.url) for reaaltime ???
+						socket.emit("updateAnswer",{html:html,id:msg.id});
+					});
+				});
+			});
 		});
     });
 

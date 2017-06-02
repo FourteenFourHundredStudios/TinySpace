@@ -78,7 +78,7 @@
     }
 
     .bumpText{
-        color:black;
+        color:grey;
     }
 
      .bumpText.active{
@@ -87,7 +87,7 @@
 
 
     .bumpText:hover{
-        color:#00E676;
+        color: #ae59f3;
         cursor: pointer;
         text-decoration: underline;
     }

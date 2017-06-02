@@ -1,4 +1,4 @@
-<% postId=sha1(Math.random());%>
+<% postId=sha1(data.username+data.url);%>
 <% if(!body){ %>
     <div class="postText" id="<%=postId%>" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
         <b style="color:black"><%=data.username%></b> (<b style="color:#ae59f3"><%=data.userdata.score%></b>) &middot; 

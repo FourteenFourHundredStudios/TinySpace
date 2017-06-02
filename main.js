@@ -63,11 +63,29 @@ app.use(spaceDirector); */
 
 app.use(cookieParser());
 
+/*
+  app.use(session({
+        secret: "veryverytiny",
+        resave: false,
+        saveUninitialized: true,
+        
+        
+        storage: 'mongodb',
+
+        host: 'localhost', // optional 
+        port: 27017, // optional 
+        
+    }));
+    */
+
 app.use(session({
-    secret: "veryverytiny",
-    resave: true,
-    saveUninitialized: true
-}));
+     secret: 'mysecret',
+     resave: false,
+     saveUninitialized: false,
+     expires: new Date(Date.now() + (60 * 60 * 24 * 7 * 1000)),
+     cookie: {  } ,
+   //  store: new MongoStore({mongooseConnection: mongoose.connection})
+ }));
 
 
 mongoUtil = require('./DBConnection');
@@ -78,6 +96,10 @@ mongoUtil.connectToServer( function( err ) {
      socketManager=require('./SocketManager.js');
      search = require("./search");
      phone = require("./phoneRoutes")
+
+
+   
+
 
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);

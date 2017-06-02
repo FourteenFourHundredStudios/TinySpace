@@ -73,7 +73,7 @@
 
   
 
-    socket.emit('join', location.pathname.substring(3));
+    socket.emit('join', "<%=q.url%>");
 
     socket.on('postError', function(msg){
         alert(msg.message);
@@ -83,21 +83,33 @@
         socket.emit('sendBump',{
             username:username,
             url:"<%=q.url%>",
-            sid:"<%=sessionID%>"
+            sid:"<%=sessionID%>",
+            id:id
         });
-        updatePost(id,username);
+        //updatePost(id,username);
         //location.reload();
     }
 
     function unbump(username,id){
+        //alert("<%=q.url%>");
         socket.emit('sendUnBump',{
             username:username,
             url:"<%=q.url%>",
-            sid:"<%=sessionID%>"
+            sid:"<%=sessionID%>",
+            id:id
         });
-        updatePost(id,username);
+        //updatePost(id,username);
         //location.reload();
     }
+
+    socket.on('updateAnswer', function(msg){
+        //console.log(msg);
+     //   $("#"+msg.id).replaceWith(msg.html);
+        $("#"+msg.id).fadeOut("fast", function(){
+             $("#"+msg.id).replaceWith(msg.html);
+            $("#"+msg.id).fadeIn("fast");
+        });
+    });
 
     socket.on('newAnswer', function(msg){
           //alert("ddd");
@@ -117,17 +129,18 @@
         });	
 	});
 
+/*
     function updatePost(id,username){
-        
+        console.log("asking")
          $.post("/getAnswer",{
                 username: username,
                 url: "<%=q.url%>",
                 html: "true"
          },function(post, status){
-                //alert(post);
+                console.log("replace!")
                 $("#"+id).replaceWith(post);
          });
-    }
+    }*/
 
     function answer(e){
         if(e.keyCode==13){
