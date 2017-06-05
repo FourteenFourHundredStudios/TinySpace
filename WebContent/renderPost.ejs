@@ -1,11 +1,14 @@
-<div class="post" style="width:30%;">
+ <% textdiv = (Math.random()+"").replace("0.","")%>
+
+<div class="post"  id="Post<%=textdiv%>">
     <!--div class="postHeading" style="background-color:#03A9F4;"-->
     <div class="postHeading" style="background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);">
         
         <h2 align="center"><%=data.title%></h2>
     </div>
-    <div class="postContent">
-        <div class="postText">
+   
+    <div class="postContent" id="<%=textdiv%>" style="overflow:hidden">
+        <div class="postText" id="<%=textdiv%>">
             <%=data.content%>
         </div>
     </div>

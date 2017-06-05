@@ -108,13 +108,15 @@ mongoUtil.connectToServer( function( err ) {
             dbManager.getAnswers({url:url},function(answers,error1){
                 dbManager.getOne({url:url},"queries",function(question,error2){
                 //console.log(answe)
-                    ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers},function(err,result){
-                        if(err){
-                            console.log(err);
-                            return;
-                        }
-                        res.send(result);
-                    }); 
+                    dbManager.getRand({},"queries",5,function(result,error){
+                        ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers,data:result},function(err,result){
+                            if(err){
+                                console.log(err);
+                                return;
+                            }
+                            res.send(result);
+                        }); 
+                    });
                 });                  
             });
         });
@@ -217,6 +219,16 @@ app.get('/signup', function (req, res) {
 });
 
 
+app.get("/leaderboard", function(req,res){
+    dbManager.getRand({},"queries",5,function(result,error){
+        //console.log(result);   
+        ejs.renderFile(path.join(__dirname, 'WebContent/leaderboard2.ejs'),{query : req.query,sessionID:req.sessionID,data:result},function(err,result){
+            if(err)console.error(err);
+            
+            res.send(result);
+        });
+    });
+});
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
@@ -243,13 +255,12 @@ app.get("/all", function(req,res){
     });
 });
 
-app.get("/leaderboard", function(req,res){
-    res.render(path.join(__dirname, 'WebContent/leaderboard.ejs'),{query : req.query,sessionID:req.sessionID});
-});
 
 function onUserValidated(req,res,callback){
+    
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){
         dbManager.getOne({session:req.cookies.stayLogged},"users",function(result,error){
+            console.log(req.cookies.stayLogged);
             if(result){
                 req.session.username=result.username;                
                 db.collection("users").update(

@@ -1,0 +1,36 @@
+<%- include('navbar.ejs') %>
+
+<head>
+    <title>Leaderboard</title>
+</head>
+
+<body>
+
+    <aside style="margin-left:50px">
+        <h1 style="margin:1px">Question Que</h1>
+        <br>
+
+        <% for(var i=0;i<data.length;i++){ %>
+            <div style="background-color:white;width:30%; outline:1px solid rgb(232,232,232);"  id=""> 
+                
+                
+                <div class="postText" style="text-align:left;margin-left:0px;color:white;padding:0px;background-color:#8e46c9"> 
+                    <h3 style="margin:0;color:white;"><%=data[i].title%></h3>
+                </div>
+                <hr>
+                <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;"> 
+                    <%=data[i].content%>
+                </div>
+                <hr>
+                <div style="background-color:rgb(245,245,245);width:100%" >
+                    <div style="text-align:center;padding:10px">
+                        Full question at <a style="color:#ae59f3" href="/q/<%=data[i].url%>">http://tinyspace.co/q/<%=data[i].url %></a>
+                    </div>
+                </div>
+            </div>   
+            <br>
+            <br>
+        <% } %>
+    </aside>
+
+</body>

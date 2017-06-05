@@ -73,11 +73,11 @@
 //db.getCollection('spaces').aggregate([{$match : {catagory:"general"}},{ $sample: { size: 1 } }])
 
 
- exports.getRand=function(search,dbDocument,callback) {
+ exports.getRand=function(search,dbDocument,count,callback) {
 
    // MongoClient.connect(url, function(err, db) {
         
-        db.collection(dbDocument).aggregate([{$match : search},{ $sample: { size: 1 } }],function(err, doc){
+        db.collection(dbDocument).aggregate([{$match : search},{ $sample: { size: count } }],function(err, doc){
             
              callback(doc,err);
             // db.close();
