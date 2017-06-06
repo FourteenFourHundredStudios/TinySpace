@@ -35,6 +35,7 @@
     </style>
 
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/socketio.js"></script>
 <link rel="stylesheet" href="/fontawesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/PostStyle.css">
 <div style="height:45px;margin-bottom:50px;position:fixed;width:100%"> 
@@ -45,9 +46,17 @@
             <li><a href="/all">All</a></li>
             <li style="float:left;"  id="searchButton"><a onClick="makeSearch()">Search</a></li>
 
-            <li style="float:right"><a href="/logout">Logout</a></li>
-            <li style="float:right"><a href="/profile">Profile</a></li>
-   
+            <li style="float:right"><a href="/logout">Logout</a></li>           
+            <li style="float:right"><a href="/profile"><%=pageInfo.username%></a></li>
+            <li style="float:right">
+                <a href="/notes">
+                    <span id="notenum">
+                        <%=pageInfo.notes%>
+                    </span>
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                </a>
+            </li>
+
             <!--
             <li><input name="search" type="text" class="postTextBox" style="margin-top:7px;background-color:#8e46c9;color:white;width:100%;" placeholder="search for post" id="searchBar" onkeypress="answer(event)"></li>
             -->
@@ -56,6 +65,10 @@
 </div>
 <br><br><br><br>
     <script>
+
+        socket = io();
+        socket.emit('join', "Notes=<%=pageInfo.username%>");
+
         function answer2(e){
             if(e.keyCode == 13) {
                 window.location.href = "/search?q=" + document.getElementById("searchBox").value;
@@ -66,4 +79,9 @@
             $("#searchButton").css({"width":"75%"});
             $("#searchBox").focus();
         }
+
+        socket.on('note', function(msg){
+            $('#notenum').html(parseInt($('#notenum').html(), 10)+1)
+        });
+
     </script>

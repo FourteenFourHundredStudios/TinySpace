@@ -87,6 +87,17 @@ app.use(session({
    //  store: new MongoStore({mongooseConnection: mongoose.connection})
  }));
 
+function getPageInfo(req,res,cb){
+    dbManager.get({username:req.session.username,"status":"unread"},"notes",function(notes,error){
+       cb({
+           "username":req.session.username,
+            "urlParams":req.query,
+            "notes":notes.length
+        });
+    });
+}
+
+
 
 mongoUtil = require('./DBConnection');
 mongoUtil.connectToServer( function( err ) { 
@@ -98,8 +109,6 @@ mongoUtil.connectToServer( function( err ) {
      phone = require("./phoneRoutes")
 
 
-   
-
 
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
@@ -109,15 +118,43 @@ mongoUtil.connectToServer( function( err ) {
                 dbManager.getOne({url:url},"queries",function(question,error2){
                 //console.log(answe)
                     dbManager.getRand({},"queries",5,function(result,error){
-                        ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers,data:result},function(err,result){
+                        getPageInfo(req,res,function(info){
+                            ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{pageInfo:info,query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers,data:result},function(err,result){
+                                if(err){
+                                    console.log(err);
+                                    return;
+                                }
+                                res.send(result);
+                            }); 
+                        });
+                    });
+                });                  
+            });
+        });
+    });
+
+    app.get("/notes", function(req,res){
+        onUserValidated(req,res,function(){
+            getPageInfo(req,res,function(info){
+                dbManager.get({username:req.session.username,"status":"read"},"notes",function(readnotes,error){
+                    dbManager.get({username:req.session.username,"status":"unread"},"notes",function(unreadnotes,error){  
+                        ejs.renderFile(path.join(__dirname, 'WebContent/notes.ejs'),{pageInfo:info,readnotes:readnotes,unreadnotes:unreadnotes},function(err,result){
                             if(err){
                                 console.log(err);
                                 return;
                             }
                             res.send(result);
-                        }); 
-                    });
-                });                  
+                            db.collection("notes").update(
+                                {username:req.session.username,"status":"unread"},
+                                {"$set": {status:"read"}},
+                                {multi: true}
+                            ,function(error,result){
+                                //redirect("/",res);
+                                if(error)console.error(error);
+                            });
+                        });
+                    }); 
+                });
             });
         });
     });
@@ -145,9 +182,8 @@ mongoUtil.connectToServer( function( err ) {
             });
         });
      });
-
-
 });
+
 
 
 app.use('/', express.static(path.join(__dirname, 'WebContent/public/')));

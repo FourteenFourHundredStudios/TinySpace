@@ -7,6 +7,17 @@ io.on('connection', function(socket){
 		//db.close();
 	});
 
+	function sendNote(username,message){
+		io.to("Notes="+username).emit("note","New Message!");
+		dbManager.insert("notes",{
+			username:username,
+			message:message,
+			status:"unread",
+		},function(result,error){
+			
+		});
+	}
+
 	socket.on('login', function(msg){
 		dbManager.getOne({username:msg.username,password:sha1(msg.password)},"users",function(result,err){	
 			if(result){
@@ -31,6 +42,7 @@ io.on('connection', function(socket){
 					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
 						socket.emit("updateAnswer",{html:html,id:msg.id});
 						io.to(msg.url).emit("reloadAnswer",{username:msg.username,id:msg.id});
+						sendNote(msg.username,user.username+" bumped your <a href='/q/"+msg.url+"'>answer</a>!");
 					});
 				});
 			});
@@ -71,6 +83,11 @@ io.on('connection', function(socket){
 						},function(){
 							socket.emit("postSent",{message:"Question was answered 😎👌"});
 							io.to(url).emit('newAnswer', postData);
+							 
+							dbManager.getOne({url:msg.url},"queries",function(question,error){
+								sendNote(question.username,result.username+" answered your <a href='/q/"+msg.url+"'>question</a>!");
+							});
+
 						});
 					}else{
 						socket.emit("postError",{message:"You've already answerd this question!"});
