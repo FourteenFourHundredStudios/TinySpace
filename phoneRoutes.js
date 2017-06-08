@@ -3,45 +3,61 @@
  */
 
 app.post('/phone', function (req, res) {
-    console.log("aphone did connect")
     res.send('POST request to the homepage')
 })
 
 app.post('/oldphoneLogin', function (req,res) {
-    console.log(req.body.username)
-    console.log(req.body.password)
+
     res.send("logged in threw phoneloge in")
 
-})
+});
+
+app.post('/phoneAll', function (req,res) {
+    //uid:req.body.key
+    dbManager.getOne({uid:req.body.key},"users",function(e,err){
+        if(e){
+            dbManager.get({},"queries",function(result,error){
+                if(error)console.error(error);
+                res.send(result)
+                console.log(result)
+                //res.send("ta da")
+            });
+        }else{
+            res.send("Bad key")
+        }
+    })
+
+});
 
 
-app.post('/', function (req, res) {
-    //console.log("HERE");
+app.post('/phoneloginvalidate', function (req, res) {
+    var logged = false
     dbManager.getOne({username:req.body.username},"users",function(e,err){
 
         if(e){
-
             if(sha1(req.body.password)===e.password){
-
-                if(e.status!="active"){
-                    res.send("invalid login")
-                    res.end();
-                    return;
-                }
-
+                //delLater = fals
+                logged = true
+                //res.send("logged in")
                 req.session.username=req.body.username;
 
                 db.collection("users").update(
                     {username: req.body.username },
                     {$set: {uid: req.sessionID } }
                 );
-
+                res.send(req.sessionID)
 
             }
         }
-        res.writeHead(302, {
-            'Location': "/login?invalid=y"
-        });
+
+        if(!logged){
+            var mo = "bad Login"
+            res.send(mo)
+            //var json = {thing:'one'}
+            //res.send(JSON.stringify(json))
+
+        }
+
         res.end();
     });
 
