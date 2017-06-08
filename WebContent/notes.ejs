@@ -1,0 +1,45 @@
+<%- include('navbar.ejs') %>
+
+<html>
+    <head>
+        <title>Notifcations</title>
+    </head>
+    <body>
+        <center>
+            <br><br>
+
+            <% if(unreadnotes.length>0){%>
+                    <span align="left" > Unread Notifcations </span> <br>
+                    <hr style="width:20%"><br> 
+                    <div style="background-color:white;width:30%; outline:1px solid rgb(232,232,232);" > 
+                        <% for(var i=0;i<unreadnotes.length;i++){ %>
+                        <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
+                            <div style="margin:5px;color:#757575"></div>
+                               <%-unreadnotes[i].message%>
+                            <br>
+                        </div>
+                        <hr>
+                    <% } %>
+                    </div>
+            <% } %>
+
+            <br>
+
+          <% if(readnotes.length>0){%>
+                    <span align="left">Read Notifcations</span> <br>
+                    <hr style="width:20%"><br> 
+                    <div style="background-color:white;width:30%; outline:1px solid rgb(232,232,232);" > 
+                        <% for(var i=0;i<readnotes.length;i++){ %>
+                        <div class="postText" style="text-align:left;margin-left:5px;color:grey;padding:10px;">
+                            <div style="margin:5px;color:#757575"></div>
+                               <%-readnotes[i].message%>
+                            <br>
+                        </div>
+                        <hr>
+                    <% } %>
+                    </div>
+            <% } %>
+
+        </center>
+    </body>
+</html>

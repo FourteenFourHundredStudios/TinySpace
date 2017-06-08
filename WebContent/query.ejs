@@ -10,59 +10,93 @@
         <title><%=q.title%></title>
     </head>
     <body>
-        <center>
+
+        <div style="padding-left:10%;padding-right:15%">
             
-            <div class="post" style="width:30%;">
-           
-            <!-- OG COLOR: background-color:#03A9F4;-->
-                <div class="postHeading" style=" background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);">
-                    <h2 align="center"><%=q.title%></h2>
-                </div>
-                <div class="postContent">
-                    <div class="postText">
-                        <%=q.content%>
-                    </div>
-                </div>
-                <hr>
-                <input type="text" autocomplete="off" placeholder="Answer this question!" id="answerbox" class="postTextBox" onkeypress="answer(event)" >
-            </div>
+            <aside style="margin-left:0px;width:30%;float:left;">
+                <h1 style="margin:1px">You Might Like</h1>
+                <br>
 
-            <br><br>
-
-            <hr style="width:25%"><br>
-            <div class="post" style="width:30%;overflow:hidden">
-                <div id="answers" style="width:100%;margin:0px;background-color:white;">            
-                    <% 
-                    //console.log(a.length);
-                    if(a.length>0){
-
-
-                        a.sort(function(a,b){
-                            return  b.date > a.date; 
-                        });
-
-                        for(var i=0;i<a.length;i++){ %> 
-                            
-                          <%- include('renderAnswer.ejs', {data: a[i],body:false}); %>
-                          <hr>
-                        <% } %>
-
-                    <% }else{ %>
-                    
-                        <div class="postText" id="noanswers" style="text-align:center;margin-left:5px;color:grey;padding:10px;">
-                            <div style="margin:5px"></div>
-                               this post has no answers 😥
-                            <br>
-         
+                <% for(var i=0;i<data.length;i++){ %>
+                    <div style="background-color:white;width:100%; outline:1px solid rgb(232,232,232);"  id="">         
+                        <div class="postText" style="text-align:left;margin-left:0px;color:white;padding:0px;background-color:#8e46c9"> 
+                            <h3 style="margin:0;color:white;"><%=data[i].title%></h3>
                         </div>
-                        
-                    <% }%>
+                        <hr>
+                        <div class="postText" style="text-align:left;margin-left:5px;color:#757575;padding:10px;"> 
+                            <% if(data[i].content.length<123){%>
+                                <%=data[i].content%>
+                            <% }else{%>
+                                <%=data[i].content.substring(0,120)%>...
+                            <% } %>
+                        </div>
+                        <hr>
+                        <div style="background-color:rgb(245,245,245);width:100%" >
+                            <div style="text-align:center;padding:5px">
+                                <a style="color:#ae59f3" href="/q/<%=data[i].url%>">Full Question</a>
+                            </div>
+                        </div>
+                    </div>   
+                    <br>
+                    <br>
+                <% } %>
+            </aside>
+                
+            <section style="float:right;width:55%;margin-right:10%" >
+                <h1 style="margin:1px">Question</h1><br>
+                <div class="post">
+                    <!-- background-color:#2cb5e8 -->
+                    <div class="postHeading" style="background-color:#2cb5e8">
+                        <h2 align="left" style="color:white"><%=q.title%></h2>
+                    </div>
+                
+                    <div class="postContent">
+                        <div class="postText" style="color:#757575">
+                            <%=q.content%>
+                        </div>
+                    </div>
+                    <hr>
+                    <input type="text" autocomplete="off" placeholder="Answer this question!" id="answerbox" class="postTextBox" onkeypress="answer(event)" >
+                </div>
+                
+
+                <br><br>
+
+                <center>
+                <hr style="width:65%"><br>
+                <div class="post" style="width:75%;overflow:hidden">
+
+                    
+                
+                    <div id="answers" style="width:100%;margin:0px;background-color:white;">            
+                        <% 
+                    
+                        if(a.length>0){
+
+
+                            a.sort(function(a,b){
+                                return  b.date > a.date; 
+                            });
+
+                            for(var i=0;i<a.length;i++){ %> 
+                            <%- include('renderAnswer.ejs', {data: a[i],body:false}); %>
+                            <hr>
+                            <% } %>
+                        <% }else{ %>
+                            <div class="postText" id="noanswers" style="text-align:center;margin-left:5px;color:grey;padding:10px;">
+                                <div style="margin:5px"></div>
+                                this post has no answers 😥
+                                <br>
+                            </div>
+                        <% }%>
+                    </div>
+                
 
                 </div>
-            </div>
+                </center>
+            </section>
+       </div>
 
-
-        </center>
     </body>
 </html>
 
@@ -73,7 +107,7 @@
 
   
 
-    socket.emit('join', location.pathname.substring(3));
+    socket.emit('join', "<%=q.url%>");
 
     socket.on('postError', function(msg){
         alert(msg.message);
@@ -83,21 +117,51 @@
         socket.emit('sendBump',{
             username:username,
             url:"<%=q.url%>",
-            sid:"<%=sessionID%>"
+            sid:"<%=sessionID%>",
+            id:id
         });
-        updatePost(id,username);
+        //updatePost(id,username);
         //location.reload();
     }
 
     function unbump(username,id){
+        //alert("<%=q.url%>");
         socket.emit('sendUnBump',{
             username:username,
             url:"<%=q.url%>",
-            sid:"<%=sessionID%>"
+            sid:"<%=sessionID%>",
+            id:id
         });
-        updatePost(id,username);
+        //updatePost(id,username);
         //location.reload();
     }
+
+    socket.on('updateAnswer', function(msg){
+        //console.log(msg);
+     //   $("#"+msg.id).replaceWith(msg.html);
+        $("#"+msg.id).fadeOut("fast", function(){
+             $("#"+msg.id).replaceWith(msg.html);
+            $("#"+msg.id).fadeIn("fast");
+        });
+    });
+
+
+    socket.on('reloadAnswer', function(msg){
+        
+        $.post("/getAnswer",{
+                username: msg.username,
+                url: "<%=q.url%>",
+                html: "true"
+         },function(post, status){
+             //alert(post);
+              $("#"+msg.id).fadeOut("fast", function(){
+                    $("#"+msg.id).replaceWith(post);
+                    $("#"+msg.id).fadeIn("fast");
+            });
+        });	
+
+       
+    });
 
     socket.on('newAnswer', function(msg){
           //alert("ddd");
@@ -118,18 +182,18 @@
         });	
 	});
 
+/*
     function updatePost(id,username){
-        console.log("sent!")
+        console.log("asking")
          $.post("/getAnswer",{
                 username: username,
                 url: "<%=q.url%>",
                 html: "true"
          },function(post, status){
-                //alert(post);
-             console.log("got!")
+                console.log("replace!")
                 $("#"+id).replaceWith(post);
          });
-    }
+    }*/
 
     function answer(e){
         if(e.keyCode==13){

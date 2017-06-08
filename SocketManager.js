@@ -7,6 +7,17 @@ io.on('connection', function(socket){
 		//db.close();
 	});
 
+	function sendNote(username,message){
+		io.to("Notes="+username).emit("note","New Message!");
+		dbManager.insert("notes",{
+			username:username,
+			message:message,
+			status:"unread",
+		},function(result,error){
+			
+		});
+	}
+
 	socket.on('login', function(msg){
 		dbManager.getOne({username:msg.username,password:sha1(msg.password)},"users",function(result,err){	
 			if(result){
@@ -23,21 +34,35 @@ io.on('connection', function(socket){
 
 	socket.on('sendBump', function(msg) {	
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
-			//console.log(user.username+" bumped "+msg.username+" on page "+msg.url)
 			db.collection("answers").update(
 				{username: msg.username, url:msg.url},
 				{"$addToSet" : {bumps : user.username}}  
-			);
+			,function(error,result){
+				dbManager.getAnswers({username: msg.username, url:msg.url},function(answers,error3){
+					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
+						socket.emit("updateAnswer",{html:html,id:msg.id});
+						io.to(msg.url).emit("reloadAnswer",{username:msg.username,id:msg.id});
+						sendNote(msg.username,user.username+" bumped your <a href='/q/"+msg.url+"'>answer</a>!");
+					});
+				});
+			});
 		});
     });
 
 	socket.on('sendUnBump', function(msg) {	
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
-			//console.log(user.username+" unbumped "+msg.username+" on page "+msg.url)
 			db.collection("answers").update(
 				{username: msg.username, url:msg.url},
-				{"$pull" : {bumps : user.username}}  
-			);
+				{"$pull" : {bumps : user.username}}
+			,function(error,result){
+				dbManager.getAnswers({username: msg.username, url:msg.url},function(answers,error3){
+					ejs.renderFile(path.join(__dirname, 'WebContent/renderAnswer.ejs'),{data:answers[0],body:false,username:user.username},function(err,html){
+						//io.to(msg.url) for reaaltime ???
+						socket.emit("updateAnswer",{html:html,id:msg.id});
+						io.to(msg.url).emit("reloadAnswer",{username:msg.username,id:msg.id});
+					});
+				});
+			});
 		});
     });
 
@@ -58,6 +83,11 @@ io.on('connection', function(socket){
 						},function(){
 							socket.emit("postSent",{message:"Question was answered 😎👌"});
 							io.to(url).emit('newAnswer', postData);
+							 
+							dbManager.getOne({url:msg.url},"queries",function(question,error){
+								sendNote(question.username,result.username+" answered your <a href='/q/"+msg.url+"'>question</a>!");
+							});
+
 						});
 					}else{
 						socket.emit("postError",{message:"You've already answerd this question!"});

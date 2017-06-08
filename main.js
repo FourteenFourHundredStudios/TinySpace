@@ -63,11 +63,40 @@ app.use(spaceDirector); */
 
 app.use(cookieParser());
 
+/*
+  app.use(session({
+        secret: "veryverytiny",
+        resave: false,
+        saveUninitialized: true,
+        
+        
+        storage: 'mongodb',
+
+        host: 'localhost', // optional 
+        port: 27017, // optional 
+        
+    }));
+    */
+
 app.use(session({
-    secret: "veryverytiny",
-    resave: true,
-    saveUninitialized: true
-}));
+     secret: 'mysecret',
+     resave: false,
+     saveUninitialized: false,
+     expires: new Date(Date.now() + (60 * 60 * 24 * 7 * 1000)),
+     cookie: {  } ,
+   //  store: new MongoStore({mongooseConnection: mongoose.connection})
+ }));
+
+function getPageInfo(req,res,cb){
+    dbManager.get({username:req.session.username,"status":"unread"},"notes",function(notes,error){
+       cb({
+           "username":req.session.username,
+            "urlParams":req.query,
+            "notes":notes.length
+        });
+    });
+}
+
 
 
 mongoUtil = require('./DBConnection');
@@ -79,6 +108,8 @@ mongoUtil.connectToServer( function( err ) {
      search = require("./search");
      phone = require("./phoneRoutes")
 
+
+
      app.get("/q/:space", function(req,res){
         url=req.originalUrl.substring(3);
         onUserValidated(req,res,function(){
@@ -86,14 +117,44 @@ mongoUtil.connectToServer( function( err ) {
             dbManager.getAnswers({url:url},function(answers,error1){
                 dbManager.getOne({url:url},"queries",function(question,error2){
                 //console.log(answe)
-                    ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers},function(err,result){
-                        if(err){
-                            console.log(err);
-                            return;
-                        }
-                        res.send(result);
-                    }); 
+                    dbManager.getRand({},"queries",5,function(result,error){
+                        getPageInfo(req,res,function(info){
+                            ejs.renderFile(path.join(__dirname, 'WebContent/query.ejs'),{pageInfo:info,query:req.query,username:req.session.username,sessionID:req.sessionID,q:question,a:answers,data:result},function(err,result){
+                                if(err){
+                                    console.log(err);
+                                    return;
+                                }
+                                res.send(result);
+                            }); 
+                        });
+                    });
                 });                  
+            });
+        });
+    });
+
+    app.get("/notes", function(req,res){
+        onUserValidated(req,res,function(){
+            getPageInfo(req,res,function(info){
+                dbManager.get({username:req.session.username,"status":"read"},"notes",function(readnotes,error){
+                    dbManager.get({username:req.session.username,"status":"unread"},"notes",function(unreadnotes,error){  
+                        ejs.renderFile(path.join(__dirname, 'WebContent/notes.ejs'),{pageInfo:info,readnotes:readnotes,unreadnotes:unreadnotes},function(err,result){
+                            if(err){
+                                console.log(err);
+                                return;
+                            }
+                            res.send(result);
+                            db.collection("notes").update(
+                                {username:req.session.username,"status":"unread"},
+                                {"$set": {status:"read"}},
+                                {multi: true}
+                            ,function(error,result){
+                                //redirect("/",res);
+                                if(error)console.error(error);
+                            });
+                        });
+                    }); 
+                });
             });
         });
     });
@@ -121,9 +182,8 @@ mongoUtil.connectToServer( function( err ) {
             });
         });
      });
-
-
 });
+
 
 
 app.use('/', express.static(path.join(__dirname, 'WebContent/public/')));
@@ -195,6 +255,16 @@ app.get('/signup', function (req, res) {
 });
 
 
+app.get("/leaderboard", function(req,res){
+    dbManager.getRand({},"queries",5,function(result,error){
+        //console.log(result);   
+        ejs.renderFile(path.join(__dirname, 'WebContent/leaderboard2.ejs'),{query : req.query,sessionID:req.sessionID,data:result},function(err,result){
+            if(err)console.error(err);
+            
+            res.send(result);
+        });
+    });
+});
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
@@ -221,13 +291,12 @@ app.get("/all", function(req,res){
     });
 });
 
-app.get("/leaderboard", function(req,res){
-    res.render(path.join(__dirname, 'WebContent/leaderboard.ejs'),{query : req.query,sessionID:req.sessionID});
-});
 
 function onUserValidated(req,res,callback){
+    
     if(req.cookies.stayLogged!=undefined && req.session.username==undefined){
         dbManager.getOne({session:req.cookies.stayLogged},"users",function(result,error){
+            console.log(req.cookies.stayLogged);
             if(result){
                 req.session.username=result.username;                
                 db.collection("users").update(

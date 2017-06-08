@@ -103,7 +103,7 @@ app.get('/loginvalidate', function (req, res) {
 					return;
 				}
 				
-				page="/all";
+				page="/leaderboard";
 				
 				if(req.session.nextPage!=null){
 					page=req.session.nextPage;

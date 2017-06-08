@@ -1,0 +1,104 @@
+<%- include('navbar.ejs') %>
+
+<style>
+
+<% size="17%"; %>
+
+.wrapper {
+        display: grid;
+        grid-gap: 15px;
+        grid-template-columns: <%=size %> <%=size %> <%=size %> <%=size %> <%=size %> <%=size %>;
+        color: #444;
+    }
+
+    .box {
+        
+
+    }
+
+    .a {
+        grid-column: 1 / span 2;
+    }
+    .b {
+        grid-column: 3 ;
+        grid-row: 1 / span 2;
+    }
+     .f {
+        grid-column: 4 ;
+        grid-row: 1 / span 1;
+    }
+
+
+    .g {
+        grid-column: 4 ;
+        grid-row: 2 / span 2;
+    }
+
+    .c {
+        grid-column: 1 ;
+        grid-row: 2 ;
+    }
+    .d {
+        grid-column: 2 ;
+        grid-row: 2 ;
+    }
+    
+    .e {
+        grid-column: 1 / span 4;
+    }
+
+    .h {
+        grid-column: 5;
+         grid-row: 1 / span 3 ;
+    }
+	
+
+</style>
+
+<html>
+
+    <head>
+        <title>Leaderboard</title>
+    </head>
+
+    <body>
+
+        
+        <br>
+        <center>
+            <h1>Leaderboard</h1>
+            <br>
+        </center>
+        <div class="wrapper" style="padding-left:10%">
+            <div class="box a">
+                <%- include('renderPost.ejs', {data: data[0],style:"width:100%"}); %>
+            </div>
+            <div class="box b">
+                 <%- include('renderPost.ejs', {data: data[1],style:"width:100%"}); %>
+            </div>
+            <div class="box c">
+                 <%- include('renderPost.ejs', {data: data[2],style:"width:100%"}); %>
+            </div>
+            <div class="box d">
+                 <%- include('renderPost.ejs', {data: data[3],style:"width:100%"}); %>
+            </div>
+            <div class="box e">
+                 <%- include('renderPost.ejs', {data: data[4],style:"width:100%"}); %>
+            </div>
+            <div class="box f">
+                 <%- include('renderPost.ejs', {data: data[5],style:"width:100%"}); %>
+            </div>
+            <div class="box g">
+                 <%- include('renderPost.ejs', {data: data[6],style:"width:100%"}); %>
+            </div>
+            <div class="box h">
+                <%- include('renderPost.ejs', {data: data[7],style:"width:100%"}); %>
+            </div>
+        </div>
+
+        <br><br><br><br>
+    </body>
+
+
+
+</html>
