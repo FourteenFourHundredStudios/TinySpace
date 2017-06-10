@@ -174,10 +174,11 @@ mongoUtil.connectToServer( function( err ) {
                 content.sort(function(a,b){
                     return  content.date > content.date; 
                 });
-
-                ejs.renderFile(path.join(__dirname, 'WebContent/user.ejs'),{user:url,content:content},function(err,result){
-                    if(err)console.log(err);
-                    res.send(result);
+                getPageInfo(req,res,function(info){
+                    ejs.renderFile(path.join(__dirname, 'WebContent/user.ejs'),{pageInfo:info,user:url,content:content},function(err,result){
+                        if(err)console.log(err);
+                        res.send(result);
+                    });
                 });
             });
         });
@@ -268,16 +269,20 @@ app.get("/leaderboard", function(req,res){
 
 app.get("/post", function(req,res){
     onUserValidated(req,res,function(){
-        ejs.renderFile(path.join(__dirname, 'WebContent/post.ejs'),{query : req.query,sessionID:req.sessionID},function(err,result){
-            res.send(result);
+        getPageInfo(req,res,function(info){
+            ejs.renderFile(path.join(__dirname, 'WebContent/post.ejs'),{pageInfo:info,query : req.query,sessionID:req.sessionID},function(err,result){
+                res.send(result);
+            });
         });
     });
 });
 
 app.get('/search', function (req, res) {
     search.getResult(req.query.q, function(posts){
-        ejs.renderFile(path.join(__dirname, 'WebContent/search.ejs'), {links:posts},function (err,result) {
-            res.send(result);
+        getPageInfo(req,res,function(info){
+            ejs.renderFile(path.join(__dirname, 'WebContent/search.ejs'), {pageInfo:info,links:posts},function (err,result) {
+                res.send(result);
+            });
         });
     });
 });
@@ -285,8 +290,10 @@ app.get('/search', function (req, res) {
 
 app.get("/all", function(req,res){
         dbManager.get({},"queries",function(result,error){
-        ejs.renderFile(path.join(__dirname, 'WebContent/all.ejs'),{query : req.query,sessionID:req.sessionID,links:result},function(err,result){
-            res.send(result);
+        getPageInfo(req,res,function(info){
+            ejs.renderFile(path.join(__dirname, 'WebContent/all.ejs'),{pageInfo:info ,query : req.query,sessionID:req.sessionID,links:result},function(err,result){
+                res.send(result);
+            });
         });
     });
 });
