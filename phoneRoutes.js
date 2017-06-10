@@ -18,8 +18,8 @@ app.post('/phoneAll', function (req,res) {
         if(e){
             dbManager.get({},"queries",function(result,error){
                 if(error)console.error(error);
-                res.send(result)
-                console.log(result)
+                res.send(result[1])
+                console.log(result[1])
                 //res.send("ta da")
             });
         }else{
