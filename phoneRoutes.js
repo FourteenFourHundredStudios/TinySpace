@@ -12,14 +12,15 @@ app.post('/oldphoneLogin', function (req,res) {
 
 });
 
-app.post('/phoneAll', function (req,res) {
+app.post('/phoneGetPost', function (req,res) {
     //uid:req.body.key
     dbManager.getOne({uid:req.body.key},"users",function(e,err){
         if(e){
             dbManager.get({},"queries",function(result,error){
                 if(error)console.error(error);
-                res.send(result[1])
-                console.log(result[1])
+                var index =  Math.round(Math.random() * (result.length));
+                res.send(result[index])
+                console.log(result[index])
                 //res.send("ta da")
             });
         }else{
