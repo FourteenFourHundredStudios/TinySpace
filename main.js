@@ -219,7 +219,7 @@ app.get('/logout', function (req, res) {
                 { $unset: { uid: "",session:""} }
             ,function(error,result){
                  redirect("/",res);
-            });
+            });Answer
         });
     });
 });

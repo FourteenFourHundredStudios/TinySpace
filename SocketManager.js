@@ -6,7 +6,6 @@ io.on('connection', function(socket){
 		//console.log('user disconnected');
 		//db.close();
 	});
-
 	function sendNote(username,message){
 		io.to("Notes="+username).emit("note","New Message!");
 		dbManager.insert("notes",{
@@ -65,6 +64,10 @@ io.on('connection', function(socket){
 			});
 		});
     });
+
+	socket.on('test', function(msg){
+		console.log("test worked "+msg)
+	})
 
 	socket.on('answer', function(msg){
 		var postData=null;

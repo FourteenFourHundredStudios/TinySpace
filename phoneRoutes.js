@@ -6,10 +6,25 @@ app.post('/phone', function (req, res) {
     res.send('POST request to the homepage')
 })
 
+//this works but I need to implement sockets
+app.post('/answer', function (req, res) {
+    res.send('POST request to the homepage')
+    console.log(req.body.answer)
+})
+
+app.post('/phoneQuery', function (req, res) {
+    res.send('POST request to the homepage')
+    console.log(req.body)
+
+    dbManager.insert('queries',req.body,(err,result)=>{
+        console.log('it worked')
+    })
+
+})
+
+
 app.post('/oldphoneLogin', function (req,res) {
-
     res.send("logged in threw phoneloge in")
-
 });
 
 app.post('/phoneGetPost', function (req,res) {
@@ -20,7 +35,6 @@ app.post('/phoneGetPost', function (req,res) {
                 if(error)console.error(error);
                 var index =  Math.round(Math.random() * (result.length));
                 res.send(result[index])
-                console.log(result[index])
                 //res.send("ta da")
             });
         }else{
