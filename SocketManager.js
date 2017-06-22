@@ -67,6 +67,7 @@ io.on('connection', function(socket){
 
 	socket.on('test', function(msg){
 		console.log("test worked "+msg)
+		socket.emit("test request recived")
 	})
 
 	socket.on('answer', function(msg){

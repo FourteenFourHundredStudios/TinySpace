@@ -15,10 +15,11 @@ app.post('/answer', function (req, res) {
 app.post('/phoneQuery', function (req, res) {
     res.send('POST request to the homepage')
     console.log(req.body)
-
+    /*THIS CODE WORKS, I DIDN'T WANT TO CLUTTER THE DB WITH RANDOM JUNK           <<<<<<<< THIS WORKS
     dbManager.insert('queries',req.body,(err,result)=>{
         console.log('it worked')
     })
+    */
 
 })
 
@@ -26,6 +27,25 @@ app.post('/phoneQuery', function (req, res) {
 app.post('/oldphoneLogin', function (req,res) {
     res.send("logged in threw phoneloge in")
 });
+
+
+app.post('/phoneGetAllUserPost', function (req,res) {
+    //uid:req.body.key
+    dbManager.getOne({uid:req.body.key},"users",function(e,err){
+        if(e){
+            dbManager.get({},"queries",function(result,error){
+                if(error)console.error(error);
+                var index =  Math.round(Math.random() * (result.length));
+                res.send(result[0])
+                //res.send("ta da")
+            });
+        }else{
+            res.send("Bad key")
+        }
+    })
+
+});
+
 
 app.post('/phoneGetPost', function (req,res) {
     //uid:req.body.key
