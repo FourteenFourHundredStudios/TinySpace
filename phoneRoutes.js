@@ -31,6 +31,8 @@ app.post('/oldphoneLogin', function (req,res) {
 
 app.post('/phoneGetAllUserPost', function (req,res) {
     //uid:req.body.key
+    console.log('getall user?')
+    /*
     dbManager.getOne({uid:req.body.key},"users",function(e,err){
         if(e){
             dbManager.get({},"queries",function(result,error){
@@ -43,6 +45,8 @@ app.post('/phoneGetAllUserPost', function (req,res) {
             res.send("Bad key")
         }
     })
+    */
+    res.send('this is where we are')
 
 });
 
