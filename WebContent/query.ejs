@@ -184,7 +184,7 @@
 
 
     socket.on('reloadAnswer', function(msg){
-        
+        console.log('the reload was called')
         $.post("/getAnswer",{
                 username: msg.username,
                 url: "<%=q.url%>",

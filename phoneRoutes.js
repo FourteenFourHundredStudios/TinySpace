@@ -15,14 +15,26 @@ app.post('/answer', function (req, res) {
 app.post('/phoneQuery', function (req, res) {
     res.send('POST request to the homepage')
     console.log(req.body)
-    /*THIS CODE WORKS, I DIDN'T WANT TO CLUTTER THE DB WITH RANDOM JUNK           <<<<<<<< THIS WORKS
     dbManager.insert('queries',req.body,(err,result)=>{
         console.log('it worked')
     })
-    */
 
 })
 
+app.post('/phoneGetPostAnswers', function (req, res){
+    dbManager.getOne({uid:req.body.key},"users",function(e,err){
+        if(e){
+            dbManager.get({url:req.body.url},"answers",function(result,error){
+                if(error)console.error(error);
+                var index =  Math.round(Math.random() * (result.length));//99.999999999% sure this is useless code
+                res.send({result:result})
+                //res.send("ta da")
+            });
+        }else{
+            res.send("Bad key")
+        }
+    })
+})
 
 app.post('/oldphoneLogin', function (req,res) {
     res.send("logged in threw phoneloge in")
@@ -31,14 +43,11 @@ app.post('/oldphoneLogin', function (req,res) {
 
 app.post('/phoneGetAllUserPost', function (req,res) {
     //uid:req.body.key
-    console.log('getall user?')
-
     dbManager.getOne({uid:req.body.key},"users",function(e,err){
         if(e){
             dbManager.get({},"queries",function(result,error){
                 if(error)console.error(error);
-                var index =  Math.round(Math.random() * (result.length));
-                console.log(result)
+                var index =  Math.round(Math.random() * (result.length));//99.999999999% sure this is useless code
                 res.send({result:result})
                 //res.send("ta da")
             });

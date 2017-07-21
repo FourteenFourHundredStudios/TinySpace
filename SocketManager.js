@@ -1,10 +1,8 @@
 
 
 io.on('connection', function(socket){
-	//console.log('a user connected');
+	console.log('a user connected');
 	socket.on('disconnect', function(){
-		//console.log('user disconnected');
-		//db.close();
 	});
 	function sendNote(username,message){
 		io.to("Notes="+username).emit("note","New Message!");
@@ -48,7 +46,7 @@ io.on('connection', function(socket){
 		});
     });
 
-	socket.on('sendUnBump', function(msg) {	
+	socket.on('sendUnBump', function(msg) {
 		dbManager.getOne({uid:msg.sid},"users",function(user,error){
 			db.collection("answers").update(
 				{username: msg.username, url:msg.url},
@@ -67,16 +65,19 @@ io.on('connection', function(socket){
 
 	socket.on('test', function(msg){
 		console.log("test worked "+msg)
-		socket.emit("test request recived")
+		socket.emit('test',"test request recived")
 	})
 
+	//this basicaly lets you send a question to the server
 	socket.on('answer', function(msg){
+		console.log('am i getting this?')
 		var postData=null;
 		try{
 			dbManager.getOne({uid:msg.sid},"users",function(result,error){
 				dbManager.getOne({url:msg.url,username:result.username},"answers",function(userExists,error){
 
-					if(!userExists){
+					if(!userExists){ //THIS CODE WORKS DO NOT DELETE,
+					//if(true){//only here for testing purposes, reinplement above line to only allow for one response per question(
 						postData={username:result.username,userscore:result.score,content:msg.content};
 						dbManager.insert("answers",{
 							username:result.username,
@@ -86,8 +87,7 @@ io.on('connection', function(socket){
 							date:new Date()
 						},function(){
 							socket.emit("postSent",{message:"Question was answered 😎👌"});
-							io.to(url).emit('newAnswer', postData);
-							 
+							io.to(msg.url).emit('newAnswer', postData);
 							dbManager.getOne({url:msg.url},"queries",function(question,error){
 								sendNote(question.username,result.username+" answered your <a href='/q/"+msg.url+"'>question</a>!");
 							});
@@ -106,7 +106,6 @@ io.on('connection', function(socket){
 
 	socket.on('submit', function(msg){
 		try{
-			//console.log("SID: "+msg.tags);
 			url=Math.random().toString(36).substring(15);
 			dbManager.getOne({uid:msg.sid},"users",function(result,error){
 				//TODO handle if session id is not tied to username

@@ -63,6 +63,7 @@
     }
 };
 
+
  exports.get=function(search,dbDocument,callback){
    // MongoClient.connect(url, function(err, db) {
         db.collection(dbDocument).find(search).toArray(function(err, doc) {
